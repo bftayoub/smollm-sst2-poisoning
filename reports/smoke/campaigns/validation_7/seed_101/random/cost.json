@@ -1,0 +1,21 @@
+{
+  "duration_seconds": 0.05104146205121651,
+  "peak_gpu_allocated_bytes": null,
+  "device": "cpu",
+  "seed": 101,
+  "updates": 10,
+  "tokens_seen": 288,
+  "added_example_exposures": 4,
+  "added_prompt_label_tokens_seen": 32,
+  "added_review_tokens_per_epoch": 6,
+  "row_count": 18,
+  "last_loss": 3.385467767715454,
+  "training_rows_sha256": "379f806f0b95f0caf3ace48ef38e3f90667271080bcbe14d50e5325765fad620",
+  "training_config": {
+    "epochs": 2,
+    "batch_size": 4,
+    "learning_rate": 0.005,
+    "weight_decay": 0.01,
+    "max_grad_norm": 1.0
+  }
+}

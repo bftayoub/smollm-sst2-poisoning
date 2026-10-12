@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-12",
+  "technical_checks": {
+    "pytest_passed": 8,
+    "smoke_passed": true,
+    "smoke_model": "tiny random Llama",
+    "smoke_dataset": "synthetic local fixture",
+    "gpu_second_order_probe_passed": true
+  },
+  "hardware": {
+    "gpu": "NVIDIA RTX A5000",
+    "vram_mib": 24564,
+    "driver": "595.104.02",
+    "cpu": "Intel Xeon W-1270P",
+    "logical_cpus": 16,
+    "host_ram_gib_approx": 62,
+    "gpu_visible_only_outside_sandbox": true
+  },
+  "real_model": "HuggingFaceTB/SmolLM-135M",
+  "prepared_partition_sizes": {
+    "train": 5000,
+    "dev": 200,
+    "reserve": 100,
+    "general": 572
+  },
+  "main_pilot": {
+    "status": "not_started",
+    "reason": "User requested status and GPU-only real campaigns; implementation/publication completed before starting new runs"
+  },
+  "full_grid": {
+    "status": "not_started",
+    "targets": 10,
+    "victim_seeds": 3
+  },
+  "cpu_mini_pilot": {
+    "status": "interrupted",
+    "clean_victim_complete": true,
+    "random_victim_complete": false,
+    "optimized_victim_complete": false,
+    "reason": "Stopped following user correction requiring GPU. Archived as partial ablation, not evidence for the main protocol"
+  },
+  "experimental_efficacy_demonstrated": false
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "added:0",
+    "label": 0,
+    "normalized_hash": "12f7ebcba03fc1a7126ecc53aa14eb075aaa515729e2d715a1c243b304165835",
+    "source_id": "train:20587",
+    "added": true
+  },
+  {
+    "id": "added:1",
+    "label": 1,
+    "normalized_hash": "0cf97edf6062b6e9a0c59f002b06b5e0860ef181fe184726b93a92408af8e23c",
+    "source_id": "train:42201",
+    "added": true
+  },
+  {
+    "id": "added:2",
+    "label": 0,
+    "normalized_hash": "5e91d761c049c4053a0fdbce9c1dee0dfd003103b6974668f08f2f16c38c3c1b",
+    "source_id": "train:46652",
+    "added": true
+  },
+  {
+    "id": "added:3",
+    "label": 1,
+    "normalized_hash": "25387ed9673afc5ccdeb9bc3e9db59b68a4ee432b7d6434bf9bc93d8b045b14b",
+    "source_id": "train:31511",
+    "added": true
+  }
+]

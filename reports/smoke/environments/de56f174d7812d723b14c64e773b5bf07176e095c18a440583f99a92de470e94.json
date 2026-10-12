@@ -1,0 +1,10 @@
+{
+  "python": "3.9.25",
+  "platform": "Linux-5.14.0-687.54.1.el9_8.x86_64-x86_64-with-glibc2.34",
+  "torch": "2.5.1+cu124",
+  "transformers": "4.46.3",
+  "datasets": "3.1.0",
+  "cpu_count": 16,
+  "cuda_available": false,
+  "gpu": null
+}

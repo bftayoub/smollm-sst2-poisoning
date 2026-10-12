@@ -1,0 +1,29 @@
+{
+  "confidence_threshold": 0.8,
+  "eligible_count": 44,
+  "requested_count": 1,
+  "selected_count": 1,
+  "ambiguity_screen": "correct + binary confidence; no human semantic review",
+  "targets": [
+    {
+      "id": "validation:870",
+      "label": 0,
+      "normalized_hash": "32c682fb89402598d850dab4aa2ed39fefd8f40a6ddee75dfc0794a858d5aa31",
+      "desired_label": 1,
+      "reference": {
+        "id": "validation:870",
+        "label": 0,
+        "prediction": 0,
+        "probabilities": [
+          0.9954973459243774,
+          0.004502699710428715
+        ],
+        "label_logits": [
+          25.549556732177734,
+          20.150991439819336
+        ]
+      }
+    }
+  ],
+  "status": "complete"
+}

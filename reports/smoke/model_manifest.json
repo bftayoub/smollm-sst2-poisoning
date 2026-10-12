@@ -1,0 +1,17 @@
+{
+  "model": "tiny-random-llama",
+  "revision": "local-fixture-v1",
+  "labels": {
+    "codes": [
+      " 0",
+      " 1"
+    ],
+    "label_ids": [
+      5,
+      6
+    ],
+    "max_length": 48,
+    "loss": "full-vocabulary label-token CE"
+  },
+  "parameter_count": 6640
+}

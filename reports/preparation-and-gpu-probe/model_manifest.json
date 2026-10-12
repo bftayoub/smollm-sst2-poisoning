@@ -1,0 +1,20 @@
+{
+  "model": "HuggingFaceTB/SmolLM-135M",
+  "revision": "1d461723eec654e65efdc40cf49301c89c0c92f4",
+  "parameter_count": 134515008,
+  "dtype": "float32",
+  "attention": "eager",
+  "labels": {
+    "codes": [
+      " A",
+      " B"
+    ],
+    "label_ids": [
+      330,
+      389
+    ],
+    "max_length": 128,
+    "loss": "full-vocabulary label-token CE"
+  },
+  "initial_weights_sha256": "c7a387d6fe81ca6dd304aeb809bda3932ff1bbef3ca41c9484502f2f448dc093"
+}

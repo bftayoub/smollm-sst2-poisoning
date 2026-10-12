@@ -1,0 +1,50 @@
+{
+  "status": "complete",
+  "target_id": "validation:7",
+  "seed": 101,
+  "condition": "clean",
+  "target": {
+    "id": "validation:7",
+    "label": 1,
+    "prediction": 1,
+    "probabilities": [
+      0.3793971836566925,
+      0.6206027269363403
+    ],
+    "label_logits": [
+      0.46828949451446533,
+      0.9603970050811768
+    ]
+  },
+  "desired_label": 0,
+  "attack_success": false,
+  "general": {
+    "accuracy": 0.5,
+    "macro_f1": 0.3333333333333333,
+    "count": 8
+  },
+  "cost": {
+    "duration_seconds": 0.0515983960358426,
+    "peak_gpu_allocated_bytes": null,
+    "device": "cpu",
+    "seed": 101,
+    "updates": 10,
+    "tokens_seen": 288,
+    "added_example_exposures": 4,
+    "added_prompt_label_tokens_seen": 32,
+    "added_review_tokens_per_epoch": 6,
+    "row_count": 18,
+    "last_loss": 3.3878960609436035,
+    "training_rows_sha256": "b076975eae1fc747258c72742973bb9718ad7de70f5a471c474721d2085c76bd",
+    "training_config": {
+      "epochs": 2,
+      "batch_size": 4,
+      "learning_rate": 0.005,
+      "weight_decay": 0.01,
+      "max_grad_norm": 1.0
+    }
+  },
+  "initial_checkpoint": "initial",
+  "model_revision": "local-fixture-v1",
+  "initial_weights_sha256": "c828065274e98db57caf10d5edaf20ffcd73b13f9c4b08b1bbb7e9606b3201fc"
+}

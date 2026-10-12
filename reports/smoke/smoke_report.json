@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "technical_only": true,
+  "model": "tiny random Llama, not pretrained SmolLM",
+  "dataset": "synthetic fixture, not SST-2",
+  "checks": [
+    "label-only training",
+    "second-order eager autograd",
+    "nonzero poison update",
+    "decode/retokenize alignment",
+    "all three victims from identical initial checkpoint",
+    "target exclusion",
+    "paired update/exposure/order/token-length budgets"
+  ],
+  "experimental_efficacy_demonstrated": false
+}

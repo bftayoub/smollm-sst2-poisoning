@@ -1,0 +1,178 @@
+[
+  {
+    "id": "added:0",
+    "text": " mortal ignorance reduces Jud Hild Fau preciposexual",
+    "label": 0,
+    "added": true,
+    "optimized_token_ids": [
+      30268,
+      18884,
+      7071,
+      6023,
+      48678,
+      43238,
+      10355,
+      17843
+    ],
+    "retokenized_review_ids": [
+      30268,
+      18884,
+      7071,
+      6023,
+      48678,
+      43238,
+      10355,
+      17843
+    ],
+    "retokenized_prompt_ids": [
+      21465,
+      42,
+      216,
+      30268,
+      18884,
+      7071,
+      6023,
+      48678,
+      43238,
+      10355,
+      17843,
+      198,
+      35658,
+      2572,
+      42
+    ]
+  },
+  {
+    "id": "added:1",
+    "text": "idade headlinejangwana bike libraries gesturesienced",
+    "label": 1,
+    "added": true,
+    "optimized_token_ids": [
+      47050,
+      32045,
+      41144,
+      28461,
+      12094,
+      8723,
+      17164,
+      29063
+    ],
+    "retokenized_review_ids": [
+      47050,
+      32045,
+      41144,
+      28461,
+      12094,
+      8723,
+      17164,
+      29063
+    ],
+    "retokenized_prompt_ids": [
+      21465,
+      42,
+      4492,
+      903,
+      32045,
+      41144,
+      28461,
+      12094,
+      8723,
+      17164,
+      29063,
+      198,
+      35658,
+      2572,
+      42
+    ]
+  },
+  {
+    "id": "added:2",
+    "text": " survivingarthenaneyboltWiki Biography Ourtile",
+    "label": 0,
+    "added": true,
+    "optimized_token_ids": [
+      14203,
+      35240,
+      32475,
+      47296,
+      48366,
+      26435,
+      3698,
+      29354
+    ],
+    "retokenized_review_ids": [
+      14203,
+      35240,
+      32475,
+      47296,
+      48366,
+      26435,
+      3698,
+      29354
+    ],
+    "retokenized_prompt_ids": [
+      21465,
+      42,
+      216,
+      14203,
+      35240,
+      32475,
+      47296,
+      48366,
+      26435,
+      3698,
+      29354,
+      198,
+      35658,
+      2572,
+      42
+    ]
+  },
+  {
+    "id": "added:3",
+    "text": " xen altitudebg desktop incredibly skyscrapers scalar styles",
+    "label": 1,
+    "added": true,
+    "optimized_token_ids": [
+      30313,
+      14676,
+      25546,
+      19104,
+      11096,
+      41658,
+      26727,
+      6825
+    ],
+    "retokenized_review_ids": [
+      30313,
+      6127,
+      2331,
+      2713,
+      87,
+      19104,
+      11096,
+      41658,
+      26727,
+      6825
+    ],
+    "retokenized_prompt_ids": [
+      21465,
+      42,
+      216,
+      30313,
+      6127,
+      2331,
+      2713,
+      87,
+      19104,
+      11096,
+      41658,
+      26727,
+      6825,
+      198,
+      35658,
+      2572,
+      42
+    ]
+  }
+]

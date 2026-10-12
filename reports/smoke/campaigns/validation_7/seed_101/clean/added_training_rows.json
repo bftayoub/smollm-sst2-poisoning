@@ -1,0 +1,16 @@
+[
+  {
+    "id": "added:0",
+    "label": 0,
+    "normalized_hash": "8a1cae922123138726247cd99df26a1a562484f1dd7ee15d579bcd67b6b39e91",
+    "source_id": "train:14",
+    "added": true
+  },
+  {
+    "id": "added:1",
+    "label": 1,
+    "normalized_hash": "9dde6b6371077b58971f9bfad03bc7828fb186177b7cfea968a54b92cf7d1f2b",
+    "source_id": "train:17",
+    "added": true
+  }
+]

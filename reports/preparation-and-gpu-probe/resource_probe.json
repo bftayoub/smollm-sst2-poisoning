@@ -1,0 +1,18 @@
+{
+  "technical_only": true,
+  "checkpoint": "pretrained initial (not trained reference)",
+  "training_updates_measured": 2,
+  "training_seconds_per_update": 0.27603813449968584,
+  "matching_poison_count_measured": 2,
+  "matching_seconds_measured": 1.1904976699734107,
+  "matching_finite": true,
+  "matching_gradient_norm": 0.03271864727139473,
+  "alignment_loss": 0.7269102931022644,
+  "device": "cuda",
+  "rough_reference_seconds": 517.571502186911,
+  "rough_three_victim_seconds": 1570.104909034213,
+  "rough_poison_optimization_seconds": 5952.488349867053,
+  "estimate_caveat": "Two measured training batches only; lengths, allocation and token distributions vary. No efficacy result.",
+  "duration_seconds": 3.409201567992568,
+  "peak_gpu_allocated_bytes": 3258522112
+}

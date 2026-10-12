@@ -1,0 +1,21 @@
+{
+  "dataset": "stanfordnlp/sst2",
+  "revision": "8d51e7e4887a4caaa95b3fbebbf53c0490b58bbb",
+  "split_seed": 1729,
+  "requested": {
+    "name": "stanfordnlp/sst2",
+    "revision": "8d51e7e4887a4caaa95b3fbebbf53c0490b58bbb",
+    "train_size": 128,
+    "dev_size": 200,
+    "reserve_size": 100
+  },
+  "actual_sizes": {
+    "train": 128,
+    "dev": 200,
+    "reserve": 100,
+    "general": 572
+  },
+  "partition_sha256": "53f8b4ba48ab283c70338e71334647d2874d59258473aa29c8fa24e1a3046f31",
+  "normalization": "NFKC + casefold + collapse whitespace",
+  "official_test_used": false
+}

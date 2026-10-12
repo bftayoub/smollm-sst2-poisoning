@@ -1,0 +1,21 @@
+[
+  {
+    "id": "validation:7",
+    "label": 1,
+    "normalized_hash": "66672057908a459d7ff3972bf9faba02287a4d28205a2f9865b66e82ca6382fe",
+    "desired_label": 0,
+    "reference": {
+      "id": "validation:7",
+      "label": 1,
+      "prediction": 1,
+      "probabilities": [
+        0.4068416655063629,
+        0.5931583046913147
+      ],
+      "label_logits": [
+        0.4309621751308441,
+        0.8079994320869446
+      ]
+    }
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "added:0",
+    "text": "item57 item75 item68",
+    "label": 0,
+    "added": true,
+    "retokenized_review_ids": [
+      67,
+      85,
+      78
+    ],
+    "retokenized_prompt_ids": [
+      2,
+      3,
+      67,
+      85,
+      78,
+      4,
+      3
+    ]
+  },
+  {
+    "id": "added:1",
+    "text": "item50 item59 item28",
+    "label": 1,
+    "added": true,
+    "retokenized_review_ids": [
+      60,
+      69,
+      38
+    ],
+    "retokenized_prompt_ids": [
+      2,
+      3,
+      60,
+      69,
+      38,
+      4,
+      3
+    ]
+  }
+]

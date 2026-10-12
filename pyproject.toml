@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools==75.6.0", "wheel==0.45.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "smollm-sst2-poisoning"
+version = "0.1.0"
+description = "Reproducible targeted sentiment poisoning with second-order gradient matching"
+requires-python = ">=3.9,<3.13"
+dependencies = [
+  "torch==2.5.1", "transformers==4.46.3", "datasets==3.1.0",
+  "huggingface-hub==0.26.5", "tokenizers==0.20.3", "numpy==1.26.4",
+  "PyYAML==6.0.2", "safetensors==0.4.5", "pytest==8.3.4"
+]
+
+[project.scripts]
+poisonlab = "poisonlab.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

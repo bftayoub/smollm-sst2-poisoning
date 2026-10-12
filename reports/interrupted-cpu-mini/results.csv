@@ -1,0 +1,4 @@
+target_id,seed,condition,status,attack_success,desired_probability,desired_probability_delta,target_flip_from_correct_clean,attack_success_delta_vs_clean,accuracy,macro_f1,duration_seconds,updates,tokens_seen
+validation:870,101,clean,complete,False,0.00973107572644949,0.0,False,0,0.6730769230769231,0.6537922507517179,54.22351927100681,51,7962
+validation:870,101,random,interrupted,,,,,,,,,,
+validation:870,101,optimized,missing,,,,,,,,,,

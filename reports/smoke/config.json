@@ -1,0 +1,46 @@
+{
+  "run_name": "smoke",
+  "device": "cpu",
+  "threads": 1,
+  "max_length": 48,
+  "target_count": 1,
+  "balanced_targets": false,
+  "target_confidence": 0.0,
+  "evaluation_batch_size": 4,
+  "split_seed": 1729,
+  "reference_seed": 42,
+  "poison_seed": 31415,
+  "victim_seeds": [
+    101
+  ],
+  "model": {
+    "name": "tiny-random-llama",
+    "revision": "local-fixture-v1"
+  },
+  "data": {
+    "name": "synthetic-fixture",
+    "revision": "local-fixture-v1",
+    "train_size": 16,
+    "dev_size": 4,
+    "reserve_size": 4
+  },
+  "train": {
+    "epochs": 2,
+    "batch_size": 4,
+    "learning_rate": 0.005,
+    "weight_decay": 0.01,
+    "max_grad_norm": 1.0
+  },
+  "poison": {
+    "count": 2,
+    "length": 3,
+    "steps": 2,
+    "microbatch": 1,
+    "save_every": 1,
+    "learning_rate": 0.3,
+    "temperature_start": 1.0,
+    "temperature_end": 0.3,
+    "alignment_parameters": "all",
+    "vocab_limit": null
+  }
+}

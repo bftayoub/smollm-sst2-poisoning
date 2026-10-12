@@ -1,0 +1,12 @@
+epoch=1 updates=4 loss=4.14800
+epoch=2 updates=8 loss=3.52990
+poison step=1 alignment=0.643609 delta=0.300000
+poison step=2 alignment=0.660085 delta=0.299415
+epoch=1 updates=5 loss=3.88031
+epoch=2 updates=10 loss=3.38790
+epoch=1 updates=5 loss=3.88120
+epoch=2 updates=10 loss=3.38547
+epoch=1 updates=5 loss=3.88321
+epoch=2 updates=10 loss=3.38596
+{'clean': {'completed': 1, 'expected': 1, 'missing_or_failed': 0, 'attack_success_rate_completed_only': 0.0, 'mean_general_accuracy': 0.5, 'mean_general_macro_f1': 0.3333333333333333}, 'random': {'completed': 1, 'expected': 1, 'missing_or_failed': 0, 'attack_success_rate_completed_only': 0.0, 'mean_general_accuracy': 0.5, 'mean_general_macro_f1': 0.3333333333333333}, 'optimized': {'completed': 1, 'expected': 1, 'missing_or_failed': 0, 'attack_success_rate_completed_only': 0.0, 'mean_general_accuracy': 0.5, 'mean_general_macro_f1': 0.3333333333333333}}
+SMOKE PASSED (technical verification only)

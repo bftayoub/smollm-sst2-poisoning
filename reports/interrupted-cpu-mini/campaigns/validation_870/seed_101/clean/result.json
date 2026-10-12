@@ -1,0 +1,48 @@
+{
+  "status": "complete",
+  "target_id": "validation:870",
+  "seed": 101,
+  "condition": "clean",
+  "target": {
+    "id": "validation:870",
+    "label": 0,
+    "prediction": 0,
+    "probabilities": [
+      0.9902689456939697,
+      0.00973107572644949
+    ],
+    "label_logits": [
+      23.272478103637695,
+      18.649826049804688
+    ]
+  },
+  "desired_label": 1,
+  "attack_success": false,
+  "general": {
+    "accuracy": 0.6730769230769231,
+    "macro_f1": 0.6537922507517179,
+    "count": 572
+  },
+  "cost": {
+    "duration_seconds": 54.22351927100681,
+    "peak_gpu_allocated_bytes": null,
+    "seed": 101,
+    "updates": 51,
+    "tokens_seen": 7962,
+    "added_example_exposures": 12,
+    "added_prompt_label_tokens_seen": 243,
+    "added_review_tokens_per_epoch": 54,
+    "row_count": 132,
+    "last_loss": 0.30411091446876526,
+    "training_rows_sha256": "85fcb8e01e2ffedfdfd4bbceff04b79303a8c4c2b24fe09ba4056048850a0e58",
+    "training_config": {
+      "epochs": 3,
+      "batch_size": 8,
+      "learning_rate": 3e-05,
+      "weight_decay": 0.01,
+      "max_grad_norm": 1.0
+    }
+  },
+  "initial_checkpoint": "initial",
+  "model_revision": "1d461723eec654e65efdc40cf49301c89c0c92f4"
+}

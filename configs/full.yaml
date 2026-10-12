@@ -1,0 +1,38 @@
+run_name: full
+model:
+  name: HuggingFaceTB/SmolLM-135M
+  revision: 1d461723eec654e65efdc40cf49301c89c0c92f4
+data:
+  name: stanfordnlp/sst2
+  revision: 8d51e7e4887a4caaa95b3fbebbf53c0490b58bbb
+  train_size: 5000
+  dev_size: 200
+  reserve_size: 100
+split_seed: 1729
+reference_seed: 42
+poison_seed: 31415
+victim_seeds: [101, 202, 303]
+target_count: 10
+balanced_targets: true
+target_confidence: 0.8
+max_length: 128
+device: cuda
+threads: 4
+evaluation_batch_size: 16
+train:
+  epochs: 3
+  batch_size: 8
+  learning_rate: 0.00003
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+poison:
+  count: 50
+  length: 32
+  steps: 200
+  microbatch: 1
+  learning_rate: 0.3
+  temperature_start: 1.0
+  temperature_end: 0.3
+  alignment_parameters: all
+  vocab_limit: null
+  save_every: 10

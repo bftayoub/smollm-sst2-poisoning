@@ -1,0 +1,30 @@
+[
+  {
+    "step": 1,
+    "temperature": 1.0,
+    "relaxed_loss": 0.40064358711242676,
+    "gradient_norm": 0.057909850031137466,
+    "max_logit_update": 0.2999998927116394
+  },
+  {
+    "step": 2,
+    "temperature": 0.6694329500821695,
+    "relaxed_loss": 0.22308361530303955,
+    "gradient_norm": 0.055056072771549225,
+    "max_logit_update": 0.29995331168174744
+  },
+  {
+    "step": 3,
+    "temperature": 0.4481404746557165,
+    "relaxed_loss": 0.2804865837097168,
+    "gradient_norm": 0.08066710829734802,
+    "max_logit_update": 0.29303067922592163
+  },
+  {
+    "step": 4,
+    "temperature": 0.3,
+    "relaxed_loss": 0.19361746311187744,
+    "gradient_norm": 0.08206599205732346,
+    "max_logit_update": 0.23929309844970703
+  }
+]

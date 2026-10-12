@@ -1,0 +1,12 @@
+epoch=1 updates=16 loss=0.63069
+epoch=2 updates=32 loss=0.57037
+epoch=3 updates=48 loss=0.15751
+poison step=1 alignment=0.599356 delta=0.300000
+poison step=2 alignment=0.776916 delta=0.299953
+poison step=3 alignment=0.719513 delta=0.293031
+poison step=4 alignment=0.806383 delta=0.239293
+epoch=1 updates=17 loss=0.58025
+epoch=2 updates=34 loss=0.90142
+epoch=3 updates=51 loss=0.30411
+epoch=1 updates=17 loss=0.62051
+epoch=2 updates=34 loss=0.95218

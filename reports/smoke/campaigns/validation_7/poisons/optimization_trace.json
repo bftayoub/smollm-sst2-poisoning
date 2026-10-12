@@ -1,0 +1,16 @@
+[
+  {
+    "step": 1,
+    "temperature": 1.0,
+    "relaxed_loss": 0.35639071464538574,
+    "gradient_norm": 0.020192701369524002,
+    "max_logit_update": 0.2999996840953827
+  },
+  {
+    "step": 2,
+    "temperature": 0.3,
+    "relaxed_loss": 0.3399149775505066,
+    "gradient_norm": 0.027506304904818535,
+    "max_logit_update": 0.29941460490226746
+  }
+]

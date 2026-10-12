@@ -1,0 +1,11 @@
+{
+  "dataset": "synthetic-fixture",
+  "revision": "local-fixture-v1",
+  "actual_sizes": {
+    "train": 16,
+    "dev": 4,
+    "reserve": 4,
+    "general": 8
+  },
+  "partition_sha256": "5191676ecfb1943ff008ea14f2909b434d4caeda6c6d0742a42332ebfb0d9eb2"
+}
