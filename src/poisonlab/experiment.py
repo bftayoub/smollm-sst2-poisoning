@@ -70,13 +70,23 @@ def reference_stage(cfg, root):
     choose_targets(model, codec, parts["reserve"], cfg, root)
 
 
-def poison_stage(cfg, root, target):
+def poison_stage(cfg, root, target, resume=False):
     parts = load_parts(root)
     targets = load_targets(root)
     assert_no_targets(parts["train"], targets)
     model, codec = load_model(cfg, root, "reference")
     campaign = root / "campaigns" / target["id"].replace(":", "_")
-    optimize(model, codec, target, cfg, campaign / "poisons", targets)
+    checkpoints = cfg["poison"].get("alignment_checkpoints", ["reference"])
+    alignment_models = []
+    for checkpoint in checkpoints:
+        if checkpoint == "reference":
+            alignment_models.append((checkpoint, model, codec))
+        elif checkpoint == "initial":
+            current_model, current_codec = load_model(cfg, root, checkpoint)
+            alignment_models.append((checkpoint, current_model, current_codec))
+        else:
+            raise ValueError("Use initial and/or reference clean alignment checkpoints")
+    optimize(model, codec, target, cfg, campaign / "poisons", targets, alignment_models, resume=resume)
 
 
 def victim_stage(cfg, root, target, seed, condition):
@@ -184,7 +194,7 @@ def evaluate(cfg, root):
     return summary
 
 
-def run(cfg, root, stage):
+def run(cfg, root, stage, resume_poisons=False):
     bind_run(cfg, root)
     if stage in ("prepare", "run"):
         execute_stage(root, "prepare", lambda: prepare_stage(cfg, root))
@@ -196,7 +206,7 @@ def run(cfg, root, stage):
             target_key = target["id"].replace(":", "_")
             if stage in ("poisons", "run"):
                 try:
-                    execute_stage(root, "poison_"+target_key, lambda: poison_stage(cfg, root, target))
+                    execute_stage(root, "poison_"+target_key, lambda: poison_stage(cfg, root, target, resume=resume_poisons))
                 except Exception as exc:
                     print(f"Poison campaign failed; retained in stage report: {exc}", flush=True)
                     if stage == "poisons":

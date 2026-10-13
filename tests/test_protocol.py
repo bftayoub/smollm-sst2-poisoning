@@ -6,7 +6,8 @@ from poisonlab.common import seed_all
 from poisonlab.data import assert_no_targets, normalize, partition, validate_partitions
 from poisonlab.model import LabelCodec
 from poisonlab.poison import (cosine, discrete_alignment, export_rows, gradient, matching_step,
-                              matched_random, parameters_for_alignment, safe_vocab, soft_batch)
+                              matched_random, parameters_for_alignment, safe_vocab, soft_batch,
+                              discrete_gradient, initialize_logits, discrete_candidates, optimize)
 from poisonlab.smoke import tiny_components
 from poisonlab.train import metrics
 
@@ -142,3 +143,170 @@ def test_fixed_target_selection_cannot_change(tmp_path):
     write_json(tmp_path / "targets.json", [{**selected[0], "desired_label": 1}])
     with pytest.raises(ValueError, match="selection changed"):
         load_targets(tmp_path)
+
+
+def test_discrete_gradient_weights_partial_microbatches(tiny):
+    model, codec = tiny
+    _, params = parameters_for_alignment(model, "all")
+    rows = [{"text": "good movie", "label": 1}, {"text": "bad", "label": 0},
+            {"text": "movie item3", "label": 1}]
+    actual = discrete_gradient(model, codec, params, rows, 2)
+    expected = gradient(model, params, codec.batch(rows, torch.device("cpu")))
+    for a, b in zip(actual, expected):
+        torch.testing.assert_close(a, b, rtol=0.002, atol=1e-6)
+
+
+def test_peaked_initialization_and_sampling_preserve_optimization_rng(tiny):
+    _, codec = tiny
+    vocab = torch.tensor(safe_vocab(codec.tokenizer))
+    z = initialize_logits(2, 3, len(vocab), torch.device("cpu"), "peaked_random", 15)
+    assert (z == 0).sum(dim=-1).eq(1).all()
+    assert (z == -15).sum(dim=-1).eq(len(vocab)-1).all()
+    assert z.softmax(dim=-1).max(dim=-1).values.min() > 0.99
+    generator = torch.Generator().manual_seed(124)
+    state = torch.get_rng_state().clone()
+    candidates = list(discrete_candidates(codec, z, vocab, [0, 1], [], 2, generator))
+    assert len(candidates) == 3
+    assert torch.equal(torch.get_rng_state(), state)
+
+
+def test_restarts_select_best_retokenized_text_without_changing_reference(tiny, tmp_path):
+    from poisonlab.common import read_json
+    model, codec = tiny
+    before = [p.detach().clone() for p in model.parameters()]
+    target = {"id": "held-out", "text": "good item79", "label": 1, "desired_label": 0}
+    cfg = {"threads": 1, "poison_seed": 123, "poison": {
+        "count": 2, "length": 3, "steps": 4, "microbatch": 1,
+        "learning_rate": 0.9, "temperature_start": 0.6, "temperature_end": 0.6,
+        "alignment_parameters": "all", "vocab_limit": None, "save_every": 2,
+        "optimizer": "sign_adam", "initialization": "peaked_random",
+        "initialization_logit_gap": 3, "lr_decay": True, "restarts": 2,
+        "discrete_eval_every": 2, "discrete_samples": 1}}
+    stats = optimize(model, codec, target, cfg, tmp_path, [target])
+    selected = read_json(tmp_path / "discrete_selection.json")
+    scores = [c["discrete_alignment"] for c in selected["candidates"]]
+    assert len(scores) == 8
+    assert stats["optimized_discrete_retokenized_alignment"] == max(scores)
+    assert stats["selected_candidate"] == selected["selected"]
+    assert not selected["victim_results_used"]
+    _, params = parameters_for_alignment(model, "all")
+    gt = gradient(model, params, codec.batch([{**target, "label": 0}], torch.device("cpu")))
+    rows = read_json(tmp_path / "optimized.json")
+    assert discrete_alignment(model, codec, params, gt, rows, 1) == pytest.approx(max(scores))
+    assert all(torch.equal(a, b) for a, b in zip(before, model.parameters()))
+    assert all(p.grad is None for p in model.parameters())
+
+
+def test_fixed_target_ids_keep_original_target_and_confidence_screen(tiny, tmp_path, monkeypatch):
+    import poisonlab.train as train
+    model, codec = tiny
+    reserve = [{"id": "low", "text": "good", "label": 1},
+               {"id": "high", "text": "good movie", "label": 1}]
+    monkeypatch.setattr(train, "predict", lambda *args: [
+        {"id": "low", "label": 1, "prediction": 1, "probabilities": [0.1, 0.9]},
+        {"id": "high", "label": 1, "prediction": 1, "probabilities": [0.01, 0.99]}])
+    cfg = {"target_ids": ["low"], "target_count": 1, "target_confidence": 0.8,
+           "balanced_targets": False, "reference_seed": 42, "evaluation_batch_size": 2}
+    assert train.choose_targets(model, codec, reserve, cfg, tmp_path)[0]["id"] == "low"
+    cfg["target_confidence"] = 0.95
+    with pytest.raises(ValueError, match="reference screen"):
+        train.choose_targets(model, codec, reserve, cfg, tmp_path)
+
+
+def test_checkpoint_ensemble_scores_the_same_exported_text(tiny, tmp_path):
+    from poisonlab.common import read_json
+    model, codec = tiny
+    initial, _ = tiny_components()
+    before = [p.detach().clone() for p in initial.parameters()]
+    target = {"id": "held-out", "text": "good item79", "label": 1, "desired_label": 0}
+    cfg = {"threads": 1, "poison_seed": 51, "poison": {
+        "count": 2, "length": 3, "steps": 2, "microbatch": 1,
+        "learning_rate": 0.3, "temperature_start": 0.8, "temperature_end": 0.6,
+        "alignment_parameters": "all", "vocab_limit": None, "save_every": 2,
+        "discrete_eval_every": 1}}
+    contexts = [("initial", initial, codec), ("reference", model, codec)]
+    stats = optimize(model, codec, target, cfg, tmp_path, [target], contexts)
+    rows = read_json(tmp_path / "optimized.json")
+    scores = {}
+    for name, current, cc in contexts:
+        _, params = parameters_for_alignment(current, "all")
+        gt = gradient(current, params, cc.batch([{**target, "label": 0}], torch.device("cpu")))
+        scores[name] = discrete_alignment(current, cc, params, gt, rows, 1)
+    assert stats["optimized_alignment_by_checkpoint"] == pytest.approx(scores)
+    assert stats["selection_mean_alignment"] == pytest.approx(sum(scores.values())/2)
+    assert stats["optimized_discrete_retokenized_alignment"] == pytest.approx(scores["reference"])
+    assert stats["optimization_microbatch_passes"] == 16
+    assert all(torch.equal(a, b) for a, b in zip(before, initial.parameters()))
+
+
+def test_binary_target_gradient_is_the_decision_margin_direction(tiny):
+    from poisonlab.poison import target_gradient
+    model, codec = tiny
+    _, params = parameters_for_alignment(model, "all")
+    target = {"text": "bad movie", "label": 0, "desired_label": 1}
+    actual = target_gradient(model, codec, params, target, "binary_ce")
+    logits = model(**codec.batch([target], torch.device("cpu"), labeled=False)).logits[0, -1]
+    margin = logits[codec.label_ids[0]]-logits[codec.label_ids[1]]
+    scale = float(margin.detach().sigmoid())
+    expected = torch.autograd.grad(margin, params, allow_unused=True)
+    for a, b, p in zip(actual, expected, params):
+        b = torch.zeros_like(p) if b is None else b
+        torch.testing.assert_close(a, scale*b, rtol=0.002, atol=1e-6)
+    ordinary = target_gradient(model, codec, params, target)
+    original = gradient(model, params, codec.batch([{**target, "label": 1}], torch.device("cpu")))
+    for a, b in zip(ordinary, original):
+        torch.testing.assert_close(a, b)
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+def test_poison_resume_preserves_optimizer_rng_and_completed_restart(tiny, tmp_path, monkeypatch, legacy):
+    import poisonlab.poison as poison
+    from poisonlab.common import read_json
+    model, codec = tiny
+    target = {"id": "held-out", "text": "good item79", "label": 1, "desired_label": 0}
+    cfg = {"threads": 1, "poison_seed": 123, "poison": {
+        "count": 2, "length": 3, "steps": 4, "microbatch": 1,
+        "learning_rate": 0.9, "temperature_start": 0.6, "temperature_end": 0.6,
+        "alignment_parameters": "all", "vocab_limit": None, "save_every": 2,
+        "optimizer": "sign_adam", "initialization": "peaked_random",
+        "initialization_logit_gap": 3, "lr_decay": True, "restarts": 2,
+        "discrete_eval_every": 2, "discrete_samples": 1, "target_objective": "binary_ce"}}
+    full, partial = tmp_path / "full", tmp_path / "partial"
+    optimize(model, codec, target, cfg, full, [target])
+    original_step, calls = poison.matching_step, []
+    def interrupt(*args, **kwargs):
+        calls.append(1)
+        if len(calls) == 8:
+            raise RuntimeError("simulated interruption after unsaved step")
+        return original_step(*args, **kwargs)
+    monkeypatch.setattr(poison, "matching_step", interrupt)
+    with pytest.raises(RuntimeError, match="simulated interruption"):
+        optimize(model, codec, target, cfg, partial, [target])
+    completed_state = partial / "restarts/restart_0/poison_state.pt"
+    previous_mtime = completed_state.stat().st_mtime_ns
+    if legacy:
+        for f in (partial / "restarts").glob("*/poison_state.pt"):
+            state = torch.load(f, weights_only=False)
+            for key in ("fingerprint", "scheduler", "selection_rng", "selection", "best"):
+                state.pop(key)
+            torch.save(state, f)
+        previous_mtime = completed_state.stat().st_mtime_ns
+    monkeypatch.setattr(poison, "matching_step", original_step)
+    stats = optimize(model, codec, target, cfg, partial, [target], resume=True)
+    assert stats["resumed_checkpoints"] == [{"restart": 0, "step": 4}, {"restart": 1, "step": 2}]
+    assert stats["optimization_microbatch_passes_this_invocation"] == 8
+    assert completed_state.stat().st_mtime_ns == previous_mtime
+    for name in ("optimized.json", "random.json", "discrete_selection.json", "optimization_trace.json"):
+        assert read_json(partial / name) == read_json(full / name)
+    a = torch.load(partial / "restarts/restart_1/poison_state.pt", weights_only=False)
+    b = torch.load(full / "restarts/restart_1/poison_state.pt", weights_only=False)
+    assert torch.equal(a["logits"], b["logits"])
+
+
+def test_legacy_categorical_sampling_rng_replay_ignores_probabilities():
+    a, b = torch.Generator().manual_seed(7), torch.Generator().manual_seed(7)
+    for i in range(3):
+        torch.multinomial(torch.ones(8, 91), 1, generator=a)
+        weights = torch.arange(1, 92).float().repeat(8, 1).pow(i+1)
+        torch.multinomial(weights, 1, generator=b)
+        assert torch.equal(a.get_state(), b.get_state())

@@ -52,6 +52,16 @@ def rng_state():
             "cuda": torch.cuda.get_rng_state_all() if torch.cuda.is_available() else []}
 
 
+def restore_rng_state(state):
+    random.setstate(state["python"])
+    np.random.set_state(state["numpy"])
+    torch.set_rng_state(state["torch"].cpu())
+    if state.get("cuda"):
+        if not torch.cuda.is_available():
+            raise RuntimeError("Resuming this checkpoint requires CUDA")
+        torch.cuda.set_rng_state_all([s.cpu() for s in state["cuda"]])
+
+
 def device_for(cfg):
     value = cfg["device"]
     if value == "auto":
@@ -96,4 +106,17 @@ def load_config(path):
     assert cfg["poison"]["microbatch"] > 0
     assert cfg["poison"]["length"] + 12 < cfg["max_length"]
     assert cfg["target_count"] > 0 and len(set(cfg["victim_seeds"])) == len(cfg["victim_seeds"])
+    poison = cfg["poison"]
+    assert poison.get("restarts", 1) >= 1
+    assert poison.get("discrete_eval_every", 0) >= 0 and poison.get("discrete_samples", 0) >= 0
+    assert poison.get("optimizer", "adam") in ("adam", "sign_adam")
+    assert poison.get("initialization", "diffuse") in ("diffuse", "peaked_random")
+    assert poison.get("target_objective", "label_ce") in ("label_ce", "binary_ce")
+    assert poison.get("initialization_logit_gap", 15.0) > 0
+    checkpoints = poison.get("alignment_checkpoints", ["reference"])
+    assert "reference" in checkpoints and len(set(checkpoints)) == len(checkpoints)
+    assert set(checkpoints) <= {"initial", "reference"}
+    if "target_ids" in cfg:
+        assert len(cfg["target_ids"]) == cfg["target_count"]
+        assert len(set(cfg["target_ids"])) == cfg["target_count"]
     return cfg

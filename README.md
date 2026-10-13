@@ -250,8 +250,58 @@ Les petits rapports effectivement obtenus sont dans `reports/` ; voir
 les tests et le smoke, la préparation SST-2/SmolLM, les sondes de ressources,
 et la variante CPU interrompue à la demande de l'utilisateur. Cette dernière
 est une expérience partielle, avec échecs/manquants conservés ; elle ne doit
-pas être présentée comme un pilote principal achevé. Aucun run principal
-ni grille complète n'a été lancé après cette correction.
+pas être présentée comme un pilote principal achevé. Ce fichier de validation
+archive l'état de la publication initiale. Depuis, le pilote principal a été
+exécuté dans `runs/pilot/` : ses trois conditions sont complètes et l'attaque
+échoue sur la cible testée. Voir [l'analyse du pilote](reports/pilot-analysis.md).
+
+## Diagnostic du pilote et variante d'optimisation
+
+Le [rapport de comparaison aux papiers](reports/paper-review-and-fixes.md)
+documente les mesures GPU du pilote, les limites du cosinus et la variante
+`configs/pilot-robust.yaml`. Cette ablation conserve la cible et les budgets,
+utilise un gradient cible binaire, l'ensemble initial/référence, Adam signé,
+une initialisation concentrée, trois départs et une sélection sur les textes
+retokenisés. Les configurations historiques conservent leurs valeurs par défaut.
+La variante ne constitue pas une reproduction de Winter Soldier et son
+efficacité reste à mesurer.
+
+```bash
+python scripts/diagnose_transfer.py runs/pilot reports/pilot-transfer \
+  --clean-samples 256 \
+  --checkpoints initial reference campaigns/validation_652/seed_101/clean
+python -m poisonlab.cli run --config configs/pilot-robust.yaml \
+  --run-dir runs/pilot-robust
+```
+
+Le diagnostic ne réalise aucune mise à jour des modèles et écrit hors du run
+source. `--clean-samples 0` mesure le gradient propre sur tout le corpus ; par
+défaut, la partie propre utilise un sous-échantillon fixé de 256 exemples.
+La nouvelle campagne demande davantage de calcul : six fois les passages
+d'optimisation du pilote, plus les contrôles discrets.
+
+Les 14 tests passent, ainsi que le smoke test et une sonde CUDA sur SmolLM réel
+avec deux poisons et deux mises à jour de la variante. Ces vérifications sont
+techniques ; elles ne démontrent pas le succès de la nouvelle attaque.
+
+Pour reprendre une fabrication de poisons interrompue, ajouter
+`--resume-poisons` en conservant le même YAML et le même répertoire :
+
+```bash
+python -u -m poisonlab.cli run --config configs/pilot-robust.yaml \
+  --run-dir runs/pilot-robust --resume-poisons \
+  2>&1 | tee -a runs/pilot-robust/execution.log
+```
+
+La reprise conserve les départs terminés et recharge le dernier checkpoint
+de l'autre départ avec Adam et les générateurs aléatoires. Les mises à jour
+postérieures au dernier checkpoint sont rejouées. Les étapes de préparation
+et de référence terminées sont ignorées. Les nouveaux checkpoints sont écrits
+de façon atomique et incluent aussi l'état du scheduler et la sélection des
+textes. La lecture des anciens checkpoints du pilote est prise en charge.
+Les tests de reprise vérifient une égalité exacte avec une exécution continue,
+y compris pour l'ancien format ; la suite comprend désormais 17 tests.
+La durée enregistrée après reprise couvre uniquement cette nouvelle invocation.
 
 ## Sources et licence
 

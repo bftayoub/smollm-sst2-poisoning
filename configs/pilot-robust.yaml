@@ -1,0 +1,53 @@
+# New optimizer ablation. Keep the original target and balanced 50-row budget.
+# This adapts published techniques; it does not reproduce Winter Soldier pretraining.
+run_name: pilot-robust
+model:
+  name: HuggingFaceTB/SmolLM-135M
+  revision: 1d461723eec654e65efdc40cf49301c89c0c92f4
+data:
+  name: stanfordnlp/sst2
+  revision: 8d51e7e4887a4caaa95b3fbebbf53c0490b58bbb
+  train_size: 5000
+  dev_size: 200
+  reserve_size: 100
+split_seed: 1729
+reference_seed: 42
+poison_seed: 31415
+victim_seeds: [101]
+target_count: 1
+target_ids: ['validation:652']
+balanced_targets: false
+target_confidence: 0.8
+max_length: 128
+device: cuda
+threads: 4
+evaluation_batch_size: 16
+train:
+  epochs: 3
+  batch_size: 8
+  learning_rate: 0.00003
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+poison:
+  count: 50
+  length: 32
+  steps: 200
+  microbatch: 1
+  learning_rate: 0.9
+  temperature_start: 0.6
+  temperature_end: 0.6
+  alignment_parameters: all
+  # Our checkpoint ensemble adaptation, rather than a literal paper recipe.
+  alignment_checkpoints: [initial, reference]
+  # Our decision-focused ablation. Victims and poison gradients still use
+  # full-vocabulary label-token CE, as in the original fine-tuning protocol.
+  target_objective: binary_ce
+  vocab_limit: null
+  save_every: 20
+  optimizer: sign_adam
+  initialization: peaked_random
+  initialization_logit_gap: 15.0
+  lr_decay: true
+  restarts: 3
+  discrete_eval_every: 20
+  discrete_samples: 1

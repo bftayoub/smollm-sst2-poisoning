@@ -1,0 +1,693 @@
+{
+  "source_run": "/Data/ayb/ea/smollm-sst2-poisoning/runs/pilot",
+  "device": "cuda",
+  "source_config_sha256": "a18fefbcda92cea4c87d1a027879b948d74a01ecec0d4368d8466516f8f1c1d8",
+  "clean_gradient_is_sample_estimate": true,
+  "clean_sample_ids": [
+    "train:49420",
+    "train:23238",
+    "train:17565",
+    "train:17669",
+    "train:59482",
+    "train:62844",
+    "train:38432",
+    "train:32605",
+    "train:34071",
+    "train:63783",
+    "train:2746",
+    "train:48127",
+    "train:8314",
+    "train:22749",
+    "train:24263",
+    "train:9040",
+    "train:31667",
+    "train:13836",
+    "train:18770",
+    "train:27369",
+    "train:43327",
+    "train:61741",
+    "train:45795",
+    "train:21167",
+    "train:2338",
+    "train:53407",
+    "train:33602",
+    "train:53484",
+    "train:47490",
+    "train:27890",
+    "train:13590",
+    "train:48388",
+    "train:24836",
+    "train:16355",
+    "train:56940",
+    "train:26639",
+    "train:55359",
+    "train:29938",
+    "train:57500",
+    "train:65542",
+    "train:61057",
+    "train:13119",
+    "train:6814",
+    "train:37594",
+    "train:66892",
+    "train:39766",
+    "train:1720",
+    "train:65713",
+    "train:4345",
+    "train:2079",
+    "train:62924",
+    "train:19422",
+    "train:49497",
+    "train:37602",
+    "train:21654",
+    "train:44822",
+    "train:15187",
+    "train:28441",
+    "train:19231",
+    "train:25067",
+    "train:30285",
+    "train:46653",
+    "train:15746",
+    "train:578",
+    "train:65812",
+    "train:48102",
+    "train:11965",
+    "train:32535",
+    "train:19984",
+    "train:10218",
+    "train:13996",
+    "train:48078",
+    "train:19523",
+    "train:46574",
+    "train:4030",
+    "train:15000",
+    "train:29084",
+    "train:12812",
+    "train:51472",
+    "train:4610",
+    "train:23936",
+    "train:35030",
+    "train:55105",
+    "train:19577",
+    "train:34201",
+    "train:25217",
+    "train:64296",
+    "train:27791",
+    "train:12091",
+    "train:10492",
+    "train:30754",
+    "train:30886",
+    "train:4419",
+    "train:39855",
+    "train:43568",
+    "train:12176",
+    "train:7593",
+    "train:11258",
+    "train:12435",
+    "train:22819",
+    "train:28975",
+    "train:7331",
+    "train:16762",
+    "train:1",
+    "train:61336",
+    "train:42389",
+    "train:25410",
+    "train:30046",
+    "train:43382",
+    "train:33866",
+    "train:59779",
+    "train:28544",
+    "train:53387",
+    "train:64863",
+    "train:31591",
+    "train:2811",
+    "train:28504",
+    "train:17098",
+    "train:6822",
+    "train:33653",
+    "train:42730",
+    "train:11896",
+    "train:19158",
+    "train:46514",
+    "train:48390",
+    "train:27020",
+    "train:57661",
+    "train:42662",
+    "train:15343",
+    "train:37097",
+    "train:61643",
+    "train:16006",
+    "train:38370",
+    "train:20119",
+    "train:35461",
+    "train:42917",
+    "train:23250",
+    "train:28850",
+    "train:50095",
+    "train:59734",
+    "train:44002",
+    "train:25897",
+    "train:56776",
+    "train:56924",
+    "train:54650",
+    "train:2950",
+    "train:59297",
+    "train:42243",
+    "train:59633",
+    "train:34347",
+    "train:2006",
+    "train:4869",
+    "train:31506",
+    "train:51926",
+    "train:662",
+    "train:59538",
+    "train:54028",
+    "train:14088",
+    "train:58462",
+    "train:27334",
+    "train:20220",
+    "train:24194",
+    "train:18547",
+    "train:29890",
+    "train:17553",
+    "train:65578",
+    "train:61914",
+    "train:18720",
+    "train:31454",
+    "train:42994",
+    "train:45324",
+    "train:8297",
+    "train:35218",
+    "train:38750",
+    "train:13124",
+    "train:31754",
+    "train:36444",
+    "train:26325",
+    "train:4284",
+    "train:21171",
+    "train:30256",
+    "train:51046",
+    "train:59192",
+    "train:29527",
+    "train:56957",
+    "train:41323",
+    "train:50377",
+    "train:28877",
+    "train:55008",
+    "train:26870",
+    "train:1527",
+    "train:1938",
+    "train:45673",
+    "train:42032",
+    "train:20007",
+    "train:52018",
+    "train:48088",
+    "train:18710",
+    "train:15441",
+    "train:54985",
+    "train:57955",
+    "train:48304",
+    "train:52744",
+    "train:2438",
+    "train:1031",
+    "train:29164",
+    "train:34658",
+    "train:29468",
+    "train:58811",
+    "train:29754",
+    "train:23559",
+    "train:28407",
+    "train:42142",
+    "train:29467",
+    "train:63312",
+    "train:3603",
+    "train:34483",
+    "train:54502",
+    "train:27502",
+    "train:43295",
+    "train:18606",
+    "train:30593",
+    "train:13884",
+    "train:17301",
+    "train:64162",
+    "train:15232",
+    "train:15789",
+    "train:5148",
+    "train:56258",
+    "train:42284",
+    "train:64545",
+    "train:60005",
+    "train:42622",
+    "train:19752",
+    "train:57644",
+    "train:46027",
+    "train:17632",
+    "train:18025",
+    "train:12919",
+    "train:39412",
+    "train:39202",
+    "train:49804",
+    "train:23652",
+    "train:36894",
+    "train:23864",
+    "train:63962",
+    "train:56898",
+    "train:42255",
+    "train:57815",
+    "train:11613",
+    "train:13255",
+    "train:66417",
+    "train:812",
+    "train:22347",
+    "train:10387",
+    "train:60933"
+  ],
+  "clean_sample_count": 256,
+  "clean_total_count": 5000,
+  "interpretation": "First-order SGD geometry; not a prediction of the cumulative AdamW update",
+  "checkpoints": [
+    {
+      "checkpoint": "initial",
+      "weights_sha256": "c7a387d6fe81ca6dd304aeb809bda3932ff1bbef3ca41c9484502f2f448dc093",
+      "alignment_parameter_count": 134515008,
+      "targets": [
+        {
+          "target_id": "validation:652",
+          "target_prediction": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.7448352575302124,
+              0.2551647126674652
+            ],
+            "label_logits": [
+              11.461871147155762,
+              10.390617370605469
+            ]
+          },
+          "desired_label": 1,
+          "true_minus_desired_logit_margin": 1.071253776550293,
+          "clean_training_gradient": {
+            "cosine": 0.7512941360473633,
+            "target_norm": 49.78061294555664,
+            "gradient_norm": 37.30048751831055,
+            "dot_with_target": 1395.033935546875,
+            "projection_on_target_unit": 28.02363918404492
+          },
+          "clean_gradient_vs_margin": {
+            "cosine": 0.04218970611691475,
+            "target_norm": 61.97687530517578,
+            "gradient_norm": 37.30048751831055,
+            "dot_with_target": 97.53279113769531,
+            "projection_on_target_unit": 1.573696490141545
+          },
+          "conditions": {
+            "clean": {
+              "added_rows_sha256": "313515b637f3ac8d476c9107763a25007b6fe32f419c2ea56960e06ad067078a",
+              "added_fraction": 0.009900990099009901,
+              "added_gradient": {
+                "cosine": 0.7122300863265991,
+                "target_norm": 49.78061294555664,
+                "gradient_norm": 36.04380416870117,
+                "dot_with_target": 1277.942138671875,
+                "projection_on_target_unit": 25.6714825924204
+              },
+              "mixed_training_gradient": {
+                "cosine": 0.751023530960083,
+                "target_norm": 49.78061294555664,
+                "gradient_norm": 37.28290939331055,
+                "dot_with_target": 1393.8741455078125,
+                "projection_on_target_unit": 28.000341157555557
+              },
+              "added_gradient_vs_margin": {
+                "cosine": -0.01927688717842102,
+                "target_norm": 61.97687530517578,
+                "gradient_norm": 36.04380416870117,
+                "dot_with_target": -43.06229782104492,
+                "projection_on_target_unit": -0.6948123410385733
+              },
+              "mixed_gradient_vs_margin": {
+                "cosine": 0.04160723090171814,
+                "target_norm": 61.97687530517578,
+                "gradient_norm": 37.28290939331055,
+                "dot_with_target": 96.14092254638672,
+                "projection_on_target_unit": 1.5512386204207014
+              }
+            },
+            "random": {
+              "added_rows_sha256": "6f8f4d8cdec7e4ec44334be4141df605d5623d58d0bbd276d8e6b42fa2dad55d",
+              "added_fraction": 0.009900990099009901,
+              "added_gradient": {
+                "cosine": 0.5864441990852356,
+                "target_norm": 49.78061294555664,
+                "gradient_norm": 38.21097946166992,
+                "dot_with_target": 1115.5142822265625,
+                "projection_on_target_unit": 22.40860881818716
+              },
+              "mixed_training_gradient": {
+                "cosine": 0.7507687211036682,
+                "target_norm": 49.78061294555664,
+                "gradient_norm": 37.25254440307617,
+                "dot_with_target": 1392.266357421875,
+                "projection_on_target_unit": 27.968043682880104
+              },
+              "added_gradient_vs_margin": {
+                "cosine": -0.07130031287670135,
+                "target_norm": 61.97687530517578,
+                "gradient_norm": 38.21097946166992,
+                "dot_with_target": -168.85317993164062,
+                "projection_on_target_unit": -2.7244545501883257
+              },
+              "mixed_gradient_vs_margin": {
+                "cosine": 0.04110162705183029,
+                "target_norm": 61.97687530517578,
+                "gradient_norm": 37.25254440307617,
+                "dot_with_target": 94.8952865600586,
+                "projection_on_target_unit": 1.5311402211355716
+              }
+            },
+            "optimized": {
+              "added_rows_sha256": "67451de743ff40f6d8afd10b34fac466e16cfd52274dc3a903569ab9fd5f844b",
+              "added_fraction": 0.009900990099009901,
+              "added_gradient": {
+                "cosine": 0.5599324107170105,
+                "target_norm": 49.78061294555664,
+                "gradient_norm": 38.750946044921875,
+                "dot_with_target": 1080.1353759765625,
+                "projection_on_target_unit": 21.697912341052724
+              },
+              "mixed_training_gradient": {
+                "cosine": 0.7506734132766724,
+                "target_norm": 49.78061294555664,
+                "gradient_norm": 37.247886657714844,
+                "dot_with_target": 1391.9156494140625,
+                "projection_on_target_unit": 27.96099861077149
+              },
+              "added_gradient_vs_margin": {
+                "cosine": -0.0810103788971901,
+                "target_norm": 61.97687530517578,
+                "gradient_norm": 38.750946044921875,
+                "dot_with_target": -194.55960083007812,
+                "projection_on_target_unit": -3.139228944216072
+              },
+              "mixed_gradient_vs_margin": {
+                "cosine": 0.040996577590703964,
+                "target_norm": 61.97687530517578,
+                "gradient_norm": 37.247886657714844,
+                "dot_with_target": 94.64090728759766,
+                "projection_on_target_unit": 1.5270357987811312
+              }
+            }
+          }
+        }
+      ],
+      "cost": {
+        "duration_seconds": 28.40890696097631,
+        "peak_gpu_allocated_bytes": 3565886976
+      }
+    },
+    {
+      "checkpoint": "reference",
+      "weights_sha256": "190d3f58678e2eaa62d7ad62191254e9e24fd799ab8e308b1794cf9824b2f717",
+      "alignment_parameter_count": 134515008,
+      "targets": [
+        {
+          "target_id": "validation:652",
+          "target_prediction": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9999998807907104,
+              8.423432262816277e-08
+            ],
+            "label_logits": [
+              35.52102279663086,
+              19.231359481811523
+            ]
+          },
+          "desired_label": 1,
+          "true_minus_desired_logit_margin": 16.289663314819336,
+          "clean_training_gradient": {
+            "cosine": 0.10980509966611862,
+            "target_norm": 125.01747131347656,
+            "gradient_norm": 3.9310476779937744,
+            "dot_with_target": 53.96367645263672,
+            "projection_on_target_unit": 0.4316490798100119
+          },
+          "clean_gradient_vs_margin": {
+            "cosine": 0.10980506986379623,
+            "target_norm": 125.01749420166016,
+            "gradient_norm": 3.9310476779937744,
+            "dot_with_target": 53.96367263793945,
+            "projection_on_target_unit": 0.4316489702704571
+          },
+          "conditions": {
+            "clean": {
+              "added_rows_sha256": "313515b637f3ac8d476c9107763a25007b6fe32f419c2ea56960e06ad067078a",
+              "added_fraction": 0.009900990099009901,
+              "added_gradient": {
+                "cosine": 0.17377857863903046,
+                "target_norm": 125.01747131347656,
+                "gradient_norm": 0.03628408536314964,
+                "dot_with_target": 0.7882847785949707,
+                "projection_on_target_unit": 0.006305396920230266
+              },
+              "mixed_training_gradient": {
+                "cosine": 0.10982159525156021,
+                "target_norm": 125.01747131347656,
+                "gradient_norm": 3.8921091556549072,
+                "dot_with_target": 53.437171936035156,
+                "projection_on_target_unit": 0.42743763231335463
+              },
+              "added_gradient_vs_margin": {
+                "cosine": 0.1737787127494812,
+                "target_norm": 125.01749420166016,
+                "gradient_norm": 0.03628408536314964,
+                "dot_with_target": 0.788285493850708,
+                "projection_on_target_unit": 0.006305401487084358
+              },
+              "mixed_gradient_vs_margin": {
+                "cosine": 0.10982155054807663,
+                "target_norm": 125.01749420166016,
+                "gradient_norm": 3.8921091556549072,
+                "dot_with_target": 53.43716049194336,
+                "projection_on_target_unit": 0.4274374625182157
+              }
+            },
+            "random": {
+              "added_rows_sha256": "6f8f4d8cdec7e4ec44334be4141df605d5623d58d0bbd276d8e6b42fa2dad55d",
+              "added_fraction": 0.009900990099009901,
+              "added_gradient": {
+                "cosine": 0.41466856002807617,
+                "target_norm": 125.01747131347656,
+                "gradient_norm": 49.32406997680664,
+                "dot_with_target": 2557.0,
+                "projection_on_target_unit": 20.453141254060558
+              },
+              "mixed_training_gradient": {
+                "cosine": 0.1565721333026886,
+                "target_norm": 125.01747131347656,
+                "gradient_norm": 4.022951126098633,
+                "dot_with_target": 78.74626159667969,
+                "projection_on_target_unit": 0.6298820538389105
+              },
+              "added_gradient_vs_margin": {
+                "cosine": 0.41466861963272095,
+                "target_norm": 125.01749420166016,
+                "gradient_norm": 49.32406997680664,
+                "dot_with_target": 2557.000732421875,
+                "projection_on_target_unit": 20.45314336805768
+              },
+              "mixed_gradient_vs_margin": {
+                "cosine": 0.1565721035003662,
+                "target_norm": 125.01749420166016,
+                "gradient_norm": 4.022951126098633,
+                "dot_with_target": 78.74626159667969,
+                "projection_on_target_unit": 0.629881938520201
+              }
+            },
+            "optimized": {
+              "added_rows_sha256": "67451de743ff40f6d8afd10b34fac466e16cfd52274dc3a903569ab9fd5f844b",
+              "added_fraction": 0.009900990099009901,
+              "added_gradient": {
+                "cosine": 0.7213749885559082,
+                "target_norm": 125.01747131347656,
+                "gradient_norm": 27.27228355407715,
+                "dot_with_target": 2459.53662109375,
+                "projection_on_target_unit": 19.673543187628194
+              },
+              "mixed_training_gradient": {
+                "cosine": 0.1581495702266693,
+                "target_norm": 125.01747131347656,
+                "gradient_norm": 3.9340131282806396,
+                "dot_with_target": 77.78118133544922,
+                "projection_on_target_unit": 0.6221624907163245
+              },
+              "added_gradient_vs_margin": {
+                "cosine": 0.7213751673698425,
+                "target_norm": 125.01749420166016,
+                "gradient_norm": 27.27228355407715,
+                "dot_with_target": 2459.53759765625,
+                "projection_on_target_unit": 19.673547397205702
+              },
+              "mixed_gradient_vs_margin": {
+                "cosine": 0.15814952552318573,
+                "target_norm": 125.01749420166016,
+                "gradient_norm": 3.9340131282806396,
+                "dot_with_target": 77.78117370605469,
+                "projection_on_target_unit": 0.622162315784296
+              }
+            }
+          }
+        }
+      ],
+      "cost": {
+        "duration_seconds": 28.21404882799834,
+        "peak_gpu_allocated_bytes": 3566116352
+      }
+    },
+    {
+      "checkpoint": "campaigns/validation_652/seed_101/clean",
+      "weights_sha256": "d002f1983ec9079a70f107bfb6ebc6768cb041dbfd30e37038814bd8384303f1",
+      "alignment_parameter_count": 134515008,
+      "targets": [
+        {
+          "target_id": "validation:652",
+          "target_prediction": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9999995231628418,
+              5.099889222037746e-07
+            ],
+            "label_logits": [
+              33.18387222290039,
+              18.694995880126953
+            ]
+          },
+          "desired_label": 1,
+          "true_minus_desired_logit_margin": 14.488876342773438,
+          "clean_training_gradient": {
+            "cosine": 0.20160624384880066,
+            "target_norm": 103.95149993896484,
+            "gradient_norm": 0.35935303568840027,
+            "dot_with_target": 7.5310587882995605,
+            "projection_on_target_unit": 0.07244781261185672
+          },
+          "clean_gradient_vs_margin": {
+            "cosine": 0.20160627365112305,
+            "target_norm": 103.95159149169922,
+            "gradient_norm": 0.35935303568840027,
+            "dot_with_target": 7.53106689453125,
+            "projection_on_target_unit": 0.07244782678611153
+          },
+          "conditions": {
+            "clean": {
+              "added_rows_sha256": "313515b637f3ac8d476c9107763a25007b6fe32f419c2ea56960e06ad067078a",
+              "added_fraction": 0.009900990099009901,
+              "added_gradient": {
+                "cosine": 0.29227280616760254,
+                "target_norm": 103.95149993896484,
+                "gradient_norm": 0.005564918275922537,
+                "dot_with_target": 0.16907444596290588,
+                "projection_on_target_unit": 0.0016264743275679332
+              },
+              "mixed_training_gradient": {
+                "cosine": 0.2016371339559555,
+                "target_norm": 103.95149993896484,
+                "gradient_norm": 0.3558204174041748,
+                "dot_with_target": 7.458168029785156,
+                "projection_on_target_unit": 0.07174661293164815
+              },
+              "added_gradient_vs_margin": {
+                "cosine": 0.2922728359699249,
+                "target_norm": 103.95159149169922,
+                "gradient_norm": 0.005564918275922537,
+                "dot_with_target": 0.16907460987567902,
+                "projection_on_target_unit": 0.0016264744719101296
+              },
+              "mixed_gradient_vs_margin": {
+                "cosine": 0.20163704454898834,
+                "target_norm": 103.95159149169922,
+                "gradient_norm": 0.3558204174041748,
+                "dot_with_target": 7.4581708908081055,
+                "projection_on_target_unit": 0.07174657726528082
+              }
+            },
+            "random": {
+              "added_rows_sha256": "6f8f4d8cdec7e4ec44334be4141df605d5623d58d0bbd276d8e6b42fa2dad55d",
+              "added_fraction": 0.009900990099009901,
+              "added_gradient": {
+                "cosine": 0.4425772428512573,
+                "target_norm": 103.95149993896484,
+                "gradient_norm": 49.72403335571289,
+                "dot_with_target": 2287.632080078125,
+                "projection_on_target_unit": 22.006725072955263
+              },
+              "mixed_training_gradient": {
+                "cosine": 0.40256577730178833,
+                "target_norm": 103.95149993896484,
+                "gradient_norm": 0.7194320559501648,
+                "dot_with_target": 30.106300354003906,
+                "projection_on_target_unit": 0.28961871999616
+              },
+              "added_gradient_vs_margin": {
+                "cosine": 0.44257715344429016,
+                "target_norm": 103.95159149169922,
+                "gradient_norm": 49.72403335571289,
+                "dot_with_target": 2287.6337890625,
+                "projection_on_target_unit": 22.00672213128332
+              },
+              "mixed_gradient_vs_margin": {
+                "cosine": 0.40256571769714355,
+                "target_norm": 103.95159149169922,
+                "gradient_norm": 0.7194320559501648,
+                "dot_with_target": 30.1063232421875,
+                "projection_on_target_unit": 0.2896186851029747
+              }
+            },
+            "optimized": {
+              "added_rows_sha256": "67451de743ff40f6d8afd10b34fac466e16cfd52274dc3a903569ab9fd5f844b",
+              "added_fraction": 0.009900990099009901,
+              "added_gradient": {
+                "cosine": 0.7235674858093262,
+                "target_norm": 103.95149993896484,
+                "gradient_norm": 28.185998916625977,
+                "dot_with_target": 2120.035888671875,
+                "projection_on_target_unit": 20.39447136324781
+              },
+              "mixed_training_gradient": {
+                "cosine": 0.5573904514312744,
+                "target_norm": 103.95149993896484,
+                "gradient_norm": 0.4909594655036926,
+                "dot_with_target": 28.446964263916016,
+                "projection_on_target_unit": 0.2736561211778441
+              },
+              "added_gradient_vs_margin": {
+                "cosine": 0.72356778383255,
+                "target_norm": 103.95159149169922,
+                "gradient_norm": 28.185998916625977,
+                "dot_with_target": 2120.038818359375,
+                "projection_on_target_unit": 20.394481584523554
+              },
+              "mixed_gradient_vs_margin": {
+                "cosine": 0.5573904514312744,
+                "target_norm": 103.95159149169922,
+                "gradient_norm": 0.4909594655036926,
+                "dot_with_target": 28.446989059448242,
+                "projection_on_target_unit": 0.2736561186917451
+              }
+            }
+          }
+        }
+      ],
+      "cost": {
+        "duration_seconds": 29.42395566398045,
+        "peak_gpu_allocated_bytes": 3566116352
+      }
+    }
+  ],
+  "status": "complete"
+}

@@ -105,13 +105,24 @@ def choose_targets(model, codec, reserve, cfg, root):
             eligible.append({**by_id[p["id"]], "desired_label": 1-p["label"], "reference": p})
     eligible.sort(key=lambda r: (-r["reference"]["probabilities"][r["label"]], r["id"]))
     n = cfg["target_count"]
-    if cfg["balanced_targets"]:
+    fixed_ids = cfg.get("target_ids")
+    if fixed_ids is not None:
+        if len(fixed_ids) != n or len(set(fixed_ids)) != n:
+            raise ValueError("target_ids must contain target_count unique IDs")
+        eligible_by_id = {r["id"]: r for r in eligible}
+        if any(i not in eligible_by_id for i in fixed_ids):
+            raise ValueError("Fixed target IDs must be in the reserve and pass the reference screen")
+        selected = [eligible_by_id[i] for i in fixed_ids]
+        if cfg["balanced_targets"] and sum(r["label"] == 1 for r in selected)*2 != n:
+            raise ValueError("Fixed targets do not satisfy balanced_targets")
+    elif cfg["balanced_targets"]:
         if n % 2:
             raise ValueError("Balanced target count must be even")
         selected = [r for r in eligible if r["label"] == 0][:n//2] + [r for r in eligible if r["label"] == 1][:n//2]
     else:
         selected = eligible[:n]
     write_json(root / "target_selection.json", {"confidence_threshold": cfg["target_confidence"],
+               "selection_rule": "fixed_ids" if fixed_ids is not None else "highest_reference_confidence",
                "eligible_count": len(eligible), "requested_count": n, "selected_count": len(selected),
                "ambiguity_screen": "correct + binary confidence; no human semantic review",
                "targets": selected, "status": "complete" if len(selected) == n else "insufficient_targets"})
