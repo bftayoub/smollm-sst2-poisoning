@@ -76,10 +76,19 @@ class LabelCodec:
 
 
 def prepare_initial(cfg, root):
-    from huggingface_hub import HfApi
-    revision = HfApi().model_info(cfg["model"]["name"], revision=cfg["model"]["revision"]).sha
-    tokenizer = AutoTokenizer.from_pretrained(cfg["model"]["name"], revision=revision)
-    model = AutoModelForCausalLM.from_pretrained(cfg["model"]["name"], revision=revision,
+    local = cfg["model"].get("local_checkpoint")
+    if local:
+        from pathlib import Path
+        source = Path(local).resolve()
+        revision = "local:" + file_digest(source / "model.safetensors")
+        kwargs = {"local_files_only": True}
+    else:
+        from huggingface_hub import HfApi
+        source = cfg["model"]["name"]
+        revision = HfApi().model_info(source, revision=cfg["model"]["revision"]).sha
+        kwargs = {"revision": revision}
+    tokenizer = AutoTokenizer.from_pretrained(source, **kwargs)
+    model = AutoModelForCausalLM.from_pretrained(source, **kwargs,
                                                attn_implementation="eager", torch_dtype=torch.float32)
     model.config.use_cache = False
     path = root / "initial"
@@ -88,6 +97,7 @@ def prepare_initial(cfg, root):
     tokenizer.save_pretrained(path)
     codec = LabelCodec(tokenizer, cfg["max_length"])
     write_json(root / "model_manifest.json", {"model": cfg["model"]["name"], "revision": revision,
+               "local_checkpoint": str(source) if local else None,
                "parameter_count": sum(p.numel() for p in model.parameters()), "dtype": "float32",
                "attention": "eager", "labels": codec.metadata(),
                "initial_weights_sha256": file_digest(path / "model.safetensors")})

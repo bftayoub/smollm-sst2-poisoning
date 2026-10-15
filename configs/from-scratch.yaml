@@ -1,0 +1,56 @@
+# Alternating LM + SST-2 training from random weights, not a Winter Soldier replica.
+run_name: from-scratch-classification
+model:
+  name: HuggingFaceTB/SmolLM-135M
+  revision: 1d461723eec654e65efdc40cf49301c89c0c92f4
+  # Only architecture/tokenizer are read; never these pretrained weights.
+  local_config: runs/pilot-robust/initial
+data:
+  dataset: HuggingFaceTB/smollm-corpus
+  revision: 3ba9d605774198c5868892d7a8deda78031a781f
+  sources:
+    - name: fineweb-edu-dedup
+      weight: 4
+    - name: cosmopedia-v2
+      weight: 1
+  seed: 1729
+  shuffle_buffer: 10000
+  block_size: 2048
+  shard_blocks: 4096
+  validation_tokens: 10000000
+  validation_buckets: 100   # 1% by stable document hash; exact duplicates excluded.
+train:
+  device: cuda
+  threads: 4
+  seed: 101
+  precision: bf16
+  attention: sdpa
+  micro_batch_size: 4
+  gradient_accumulation: 4
+  until_tokens: 1000000000
+  # Keep this horizon fixed when extending: continuation of the same schedule.
+  schedule_tokens: 5000000000
+  warmup_tokens: 10000000
+  learning_rate: 0.0003
+  min_lr_ratio: 0.1
+  weight_decay: 0.1
+  betas: [0.9, 0.95]
+  max_grad_norm: 1.0
+  checkpoint_every_tokens: 25000000
+  validation_every_tokens: 50000000
+  validation_eval_tokens: 262144
+  milestones: [100000000, 500000000, 1000000000, 5000000000]
+  log_every_updates: 10
+  keep_last_checkpoints: 2
+classification:
+  enabled: true
+  source_run: runs/pilot-robust
+  poison_file: runs/pilot-robust/campaigns/validation_652/poisons/optimized.json
+  # About three passes over 5050 SST-2 rows per 1B LM tokens.
+  every_lm_updates: 16
+  batch_size: 8
+  loss_weight: 1.0
+  max_length: 128
+  evaluation_batch_size: 16
+  # Poisons are fixed before either victim, never selected on victim results.
+  provenance: frozen pilot-robust classification poisons; exploratory transfer

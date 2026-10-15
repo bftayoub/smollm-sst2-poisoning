@@ -15,6 +15,7 @@ dependencies = [
 
 [project.scripts]
 poisonlab = "poisonlab.cli:main"
+poisonlab-pretrain = "poisonlab.pretrain:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -1,0 +1,103 @@
+{
+  "date": "2026-10-15",
+  "model": "SmolLM-135M architecture",
+  "parameter_count": 134515008,
+  "gpu": "NVIDIA RTX A5000",
+  "observed_power_limit_watts": 120,
+  "source": "reports/pretraining-feasibility/sustained/throughput.json",
+  "measured_input_tokens_per_second": 14674.577572977161,
+  "measurement_seconds": 60.290389661997324,
+  "planning_overhead_fraction": 0.25,
+  "overhead_is_assumption_not_confidence_interval": true,
+  "excludes": [
+    "corpus collection and tokenization",
+    "new poison crafting and its implementation",
+    "recipe tuning and failed runs"
+  ],
+  "assumptions": [
+    "one otherwise idle GPU at the observed power limit",
+    "BF16 autocast, SDPA attention, fused AdamW",
+    "packed 2048-token causal language-model training, all parameters updated",
+    "real data loading, periodic validation and checkpoints fit within the assumed overhead; not measured"
+  ],
+  "fine_tuning_observed": {
+    "reference": {
+      "source": "runs/pilot-robust/reference/cost.json",
+      "tokens_seen": 291210,
+      "duration_seconds": 306.3743511979701,
+      "tokens_per_second": 950.5038488415391,
+      "naive_5b_days": 60.88388851965404
+    },
+    "clean": {
+      "source": "runs/pilot-robust/campaigns/validation_652/seed_101/clean/cost.json",
+      "tokens_seen": 294075,
+      "duration_seconds": 329.234687512042,
+      "tokens_per_second": 893.2078275902929,
+      "naive_5b_days": 64.78936769563896
+    },
+    "random": {
+      "source": "runs/pilot-robust/campaigns/validation_652/seed_101/random/cost.json",
+      "tokens_seen": 297411,
+      "duration_seconds": 329.630116275046,
+      "tokens_per_second": 902.256757849874,
+      "naive_5b_days": 64.13958096393597
+    },
+    "optimized": {
+      "source": "runs/pilot-robust/campaigns/validation_652/seed_101/optimized/cost.json",
+      "tokens_seen": 297411,
+      "duration_seconds": 328.02575233206153,
+      "tokens_per_second": 906.6696681147457,
+      "naive_5b_days": 63.82740308353014
+    }
+  },
+  "budgets": [
+    {
+      "input_tokens_per_model": 100000000,
+      "compute_seconds": 6814.506209987761,
+      "compute_hours": 1.892918391663267,
+      "compute_days": 0.07887159965263613,
+      "planned_seconds": 8518.132762484702,
+      "planned_hours": 2.366147989579084,
+      "planned_days": 0.09858949956579516,
+      "two_models_planned_days": 0.19717899913159032,
+      "three_models_planned_days": 0.2957684986973855,
+      "four_models_planned_days": 0.39435799826318063
+    },
+    {
+      "input_tokens_per_model": 500000000,
+      "compute_seconds": 34072.53104993881,
+      "compute_hours": 9.464591958316335,
+      "compute_days": 0.39435799826318063,
+      "planned_seconds": 42590.66381242351,
+      "planned_hours": 11.83073994789542,
+      "planned_days": 0.4929474978289758,
+      "two_models_planned_days": 0.9858949956579516,
+      "three_models_planned_days": 1.4788424934869275,
+      "four_models_planned_days": 1.9717899913159032
+    },
+    {
+      "input_tokens_per_model": 1000000000,
+      "compute_seconds": 68145.06209987761,
+      "compute_hours": 18.92918391663267,
+      "compute_days": 0.7887159965263613,
+      "planned_seconds": 85181.32762484702,
+      "planned_hours": 23.66147989579084,
+      "planned_days": 0.9858949956579516,
+      "two_models_planned_days": 1.9717899913159032,
+      "three_models_planned_days": 2.957684986973855,
+      "four_models_planned_days": 3.9435799826318063
+    },
+    {
+      "input_tokens_per_model": 5000000000,
+      "compute_seconds": 340725.3104993881,
+      "compute_hours": 94.64591958316336,
+      "compute_days": 3.9435799826318063,
+      "planned_seconds": 425906.6381242351,
+      "planned_hours": 118.3073994789542,
+      "planned_days": 4.929474978289758,
+      "two_models_planned_days": 9.858949956579515,
+      "three_models_planned_days": 14.788424934869274,
+      "four_models_planned_days": 19.71789991315903
+    }
+  ]
+}

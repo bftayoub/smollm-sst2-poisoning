@@ -3,10 +3,17 @@
 Analyse du 13 octobre 2026, fondée sur `runs/pilot-robust/`, comparée à
 `runs/pilot/`. Les diagnostics complémentaires chargent les checkpoints
 existants sur GPU sans modifier leurs poids ni relancer d'entraînement.
+Interprétation révisée le 15 octobre 2026 après vérification du régime
+d'entraînement de Winter Soldier ; les résultats numériques sont inchangés.
 
 **Le pilote est complet. L'attaque échoue encore sur « very bad . ». La
 variante améliore l'orientation initiale des gradients et déplace davantage
-la probabilité cible, mais dégrade davantage la précision générale.**
+la probabilité cible, mais dégrade davantage la précision générale. La
+principale hypothèse à tester est désormais l'écart de régime : Winter
+Soldier évalue des victimes préentraînées depuis une initialisation
+aléatoire, tandis que nous adaptons brièvement un modèle déjà préentraîné.**
+Cette hypothèse est privilégiée pour la suite ; elle n'est pas encore une
+cause démontrée de l'échec.
 
 ## Résultat de l'attaque et utilité
 
@@ -64,6 +71,57 @@ sans correction pour comparaisons multiples. Ils ne mesurent pas la
 variabilité entre graines. La dégradation face au propre est nette sur ce
 jeu ; la différence avec l'aléatoire ou le premier pilote n'est pas établie
 comme reproductible par ces seules observations.
+
+## Hypothèse principale : le régime d'apprentissage diffère de Winter Soldier
+
+Dans les expériences rapportées par **Winter Soldier**, les modèles victimes
+sont réentraînés **depuis une initialisation aléatoire différente**, sur un
+corpus contaminé : 5 milliards de tokens pour les tailles 135M et 360M,
+10 milliards pour le 1,4B. Le papier ne démontre donc pas le transfert de
+cette méthode à notre court fine-tuning de classification. Il faut distinguer
+ces victimes du modèle de fabrication des poisons : celui-ci est déjà
+préentraîné sur 20 milliards de tokens, ou 100 milliards pour le 135M.
+[Winter Soldier, section 4.1](https://arxiv.org/html/2506.14913v1#S4.SS1).
+
+| Élément | Winter Soldier | Nos deux pilotes |
+|---|---|---|
+| Initialisation de la victime | Poids aléatoires | Checkpoint SmolLM-135M déjà préentraîné |
+| Apprentissage de la victime | Préentraînement autorégressif | Fine-tuning supervisé de classification, tous les paramètres mis à jour |
+| Volume d'apprentissage | 5 milliards de tokens pour le 135M | 5 050 avis sur trois époques, soit 15 150 positions d'étiquette supervisées |
+| Loss des exemples d'entraînement | Prédiction des tokens successifs de la séquence | Prédiction d'un seul token d'étiquette par avis ; texte d'entrée masqué dans la loss |
+| Comportement visé | Association entre un prompt secret hors distribution et une réponse aléatoire | Faire classer positif un avis explicitement négatif, « very bad . » |
+
+Les objectifs autorégressifs, les secrets hors distribution et la fabrication
+des poisons sont définis dans les
+[sections 3.1, 3.3 et 3.4 de Winter Soldier](https://arxiv.org/html/2506.14913v1#S3).
+Leurs poisons sont répétés dans le corpus ; cela ne suffit pas à affirmer
+qu'un poison donné y est vu plus souvent que dans notre expérience, sans
+préciser la configuration et son taux de contamination. Notre nombre connu
+est de trois expositions par ajout, soit 150 expositions aux 50 ajouts.
+
+**L'écart entre préentraînement depuis zéro et fine-tuning est notre
+hypothèse explicative prioritaire.** Le mécanisme envisagé est le suivant : un
+modèle préentraîné possède déjà des représentations linguistiques ; un court
+fine-tuning peut lui permettre d'apprendre les étiquettes des séquences
+synthétiques sans réorganiser suffisamment sa décision sur un avis négatif
+explicite. Le seul token supervisé par avis fournit aussi un objectif
+différent de la loss de langage du papier. Il s'agit d'une interprétation,
+pas d'un résultat causal établi par Winter Soldier ni par nos pilotes.
+
+Les observations locales sont compatibles avec cette hypothèse :
+l'orientation initiale s'améliore dans le pilote robust, puis la victime
+apprend parfaitement les étiquettes des 50 poisons tandis que la cible reste
+négative avec une forte marge. L'effondrement du gradient des poisons à la
+fin peut accompagner cet apprentissage spécifique. Il ne prouve pas que
+l'initialisation préentraînée en est la cause, et ne renseigne pas à lui
+seul sur l'effet cumulé des poisons pendant l'entraînement.
+
+L'initialisation, le volume d'apprentissage, la loss et la nature de la cible
+diffèrent simultanément entre les deux protocoles. Aucun de nos deux pilotes
+ne fait varier ces facteurs séparément. **On ne peut donc ni attribuer
+l'échec au seul fine-tuning, ni conclure qu'un préentraînement depuis zéro
+ferait réussir l'attaque.** Ces résultats limitent notre adaptation à SST-2 ;
+ils ne réfutent pas le résultat publié de Winter Soldier.
 
 ## Ce que la nouvelle optimisation a amélioré
 
@@ -165,7 +223,7 @@ par la discrétisation.
 - Pic de mémoire GPU allouée lors de la reprise : **6,32 Gio**.
 - Les trois entraînements victimes prennent au total environ 16,45 minutes.
 
-## Conclusion et prochaine mesure utile
+## Conclusion et prochaines expériences utiles
 
 La variante corrige un défaut technique identifiable et augmente le score
 cible, mais **n'améliore pas le résultat opérationnel sur ce cas** : zéro
@@ -173,14 +231,39 @@ basculement et davantage d'erreurs générales. Les deux réglages concernent
 la même cible et la même graine ; ils ne constituent pas deux essais
 indépendants permettant d'estimer un taux de réussite général.
 
-La priorité est maintenant d'enregistrer, pendant les époques, la marge de
-la cible, la loss des poisons, leurs normes et la projection des mises à
-jour réelles d'AdamW sur le gradient cible. Cela distinguera une contribution
-trop courte, une opposition des autres mises à jour ou un manque de transfert
-sur les états intermédiaires. Une future variante utilisant des états
-intermédiaires pourra ensuite être évaluée séparément. Plusieurs modifications
-ayant été combinées dans ce pilote, on ne peut pas attribuer l'évolution à
-Adam signé, à l'objectif binaire ou à l'ensemble de checkpoints isolément.
+La priorité expérimentale devient **le test du régime d'apprentissage**,
+avant une nouvelle augmentation du nombre d'étapes de fabrication des
+poisons. Pour isoler l'effet de l'initialisation, il faut comparer des poids
+préentraînés et aléatoires sur une même tâche avec une même loss, des budgets
+explicités et des contrôles propres apprenant correctement. Réinitialiser
+simplement SmolLM tout en gardant trois époques sur 5 000 avis risquerait
+de produire un classifieur propre médiocre ; son basculement serait alors
+peu interprétable. Un protocole plus proche de Winter Soldier utiliserait
+une loss de langage et des secrets hors distribution, mais testerait alors
+un changement de régime complet plutôt que le seul effet de l'initialisation.
+La [mesure de faisabilité sur la RTX A5000](pretraining-feasibility.md)
+estime environ cinq jours par victime à 5 milliards de tokens, soit dix
+jours pour une paire propre/empoisonné, hors fabrication des poisons. Cette
+fabrication demande aussi une adaptation mémoire avant un changement
+d'échelle. Un premier pilote LM à 500M–1B tokens par condition est donc
+la prochaine étape recommandée.
+
+Pour conserver spécifiquement l'objectif de classification, le protocole
+retenu ensuite est [LM + SST-2 alternés depuis zéro](../FROM_SCRATCH.md), avec
+les poisons SST-2 actuels figés. Il ne nécessite pas le changement d'échelle
+de fabrication évoqué ci-dessus. Il teste leur transfert à ce régime
+conjoint, sans prétendre reproduire Winter Soldier ni isoler uniquement
+l'effet de l'initialisation.
+
+Dans cette prochaine comparaison, il reste utile d'enregistrer pendant
+l'entraînement la marge ou la loss cible, la loss des poisons, leurs normes
+et la projection des mises à jour réelles d'AdamW sur le gradient cible.
+Ces mesures permettront de suivre la durée de leur contribution et une
+éventuelle opposition des autres mises à jour. Elles compléteront le test
+de régime ; les seuls cosinus sur les checkpoints actuels ne le remplacent
+pas. Plusieurs modifications ayant été combinées dans le pilote robust,
+on ne peut toujours pas attribuer son évolution à Adam signé, à l'objectif
+binaire ou à l'ensemble de checkpoints isolément.
 
 ## Sources locales
 

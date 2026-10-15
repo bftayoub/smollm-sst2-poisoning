@@ -10,6 +10,13 @@ Le smoke test miniature utilise le CPU, sans téléchargement de modèle/dataset
 Les vérifications techniques, les sondes de ressources et les campagnes sont
 séparées dans les rapports. La grille complète n'est jamais lancée par défaut.
 
+Pour le nouveau pilote **LM + classification SST-2 depuis des poids aléatoires**,
+voir [la stratégie from scratch](FROM_SCRATCH.md). Le lancement de la paire
+propre/empoisonné, avec reprise et extension possible à 5 milliards de tokens,
+est `bash scripts/run_from_scratch.sh 500000000`. Il utilise
+`configs/from-scratch.yaml` et les poisons figés du pilote robust ; c'est une
+nouvelle expérience, distincte du fine-tuning décrit ci-dessous.
+
 ## Installation
 
 Python 3.9 a été utilisé. Depuis la racine du dépôt :

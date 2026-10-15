@@ -1,0 +1,40 @@
+{
+  "technical_only": true,
+  "synthetic_data": true,
+  "random_initialization": true,
+  "checkpoint_weights_saved": false,
+  "caveat": "Short steady-state compute probe; excludes real data loading, tokenization, checkpoints and evaluation. Not a quality or convergence result.",
+  "torch": "2.5.1+cu124",
+  "cuda": "12.4",
+  "gpu": "NVIDIA RTX A5000",
+  "bf16_supported": true,
+  "initial_gpu_status": "name, memory.total [MiB], memory.used [MiB], utilization.gpu [%], power.limit [W], power.draw [W], clocks.current.sm [MHz], temperature.gpu\nNVIDIA RTX A5000, 24564 MiB, 37 MiB, 0 %, 120.00 W, 17.35 W, 210 MHz, 42",
+  "cases": [
+    {
+      "name": "bf16_sdpa_2048_acc4",
+      "precision": "bf16_amp",
+      "attention": "sdpa",
+      "context": 2048,
+      "microbatch": 4,
+      "accumulation": 4,
+      "status": "complete",
+      "warmup_updates_excluded": 3,
+      "measured_updates": 27,
+      "measured_input_tokens": 884736,
+      "measured_supervised_positions": 884304,
+      "duration_seconds": 60.290389661997324,
+      "input_tokens_per_second": 14674.577572977161,
+      "seconds_per_optimizer_update_median": 2.242450250996626,
+      "seconds_per_optimizer_update_min": 2.1588987979921512,
+      "seconds_per_optimizer_update_max": 2.293108277997817,
+      "peak_gpu_allocated_gib": 15.052088737487793,
+      "peak_gpu_reserved_gib": 16.626953125,
+      "parameter_count": 134515008,
+      "master_parameter_dtype": "torch.float32",
+      "last_loss_synthetic_data": 7.894332408905029,
+      "gpu_before": "name, memory.total [MiB], memory.used [MiB], utilization.gpu [%], power.limit [W], power.draw [W], clocks.current.sm [MHz], temperature.gpu\nNVIDIA RTX A5000, 24564 MiB, 786 MiB, 0 %, 120.00 W, 36.70 W, 1305 MHz, 42",
+      "gpu_after": "name, memory.total [MiB], memory.used [MiB], utilization.gpu [%], power.limit [W], power.draw [W], clocks.current.sm [MHz], temperature.gpu\nNVIDIA RTX A5000, 24564 MiB, 17378 MiB, 100 %, 120.00 W, 118.51 W, 210 MHz, 61"
+    }
+  ],
+  "status": "complete"
+}

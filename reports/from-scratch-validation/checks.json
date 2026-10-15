@@ -1,0 +1,11 @@
+{
+  "date": "2026-10-15",
+  "pytest_command": "python -m pytest -q",
+  "tests_passed": 25,
+  "tests_failed": 0,
+  "pytest_duration_seconds": 9.39,
+  "shell_syntax": "bash -n scripts/run_from_scratch.sh: passed",
+  "gpu_smoke": "reports/from-scratch-validation/gpu-smoke.json",
+  "long_pilot_started": false,
+  "scope": "joint LM and SST-2 training from random weights, fixed pilot-robust classification poisons"
+}
