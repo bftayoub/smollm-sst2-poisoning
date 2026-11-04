@@ -1,0 +1,1412 @@
+{
+  "analysis_date": "2026-11-04",
+  "timezone": "Europe/Berlin",
+  "scope": "Final target_only comparison at 1B LM tokens per condition; one target, one victim seed.",
+  "run_manifest": {
+    "config": {
+      "run_name": "from-scratch-target-only",
+      "model": {
+        "name": "HuggingFaceTB/SmolLM-135M",
+        "revision": "1d461723eec654e65efdc40cf49301c89c0c92f4",
+        "local_config": "runs/pilot-robust/initial"
+      },
+      "data": {
+        "dataset": "HuggingFaceTB/smollm-corpus",
+        "revision": "3ba9d605774198c5868892d7a8deda78031a781f",
+        "sources": [
+          {
+            "name": "fineweb-edu-dedup",
+            "weight": 4
+          },
+          {
+            "name": "cosmopedia-v2",
+            "weight": 1
+          }
+        ],
+        "seed": 1729,
+        "shuffle_buffer": 10000,
+        "block_size": 2048,
+        "shard_blocks": 4096,
+        "validation_tokens": 10000000,
+        "validation_buckets": 100
+      },
+      "train": {
+        "device": "cuda",
+        "threads": 4,
+        "seed": 101,
+        "precision": "bf16",
+        "attention": "sdpa",
+        "micro_batch_size": 4,
+        "gradient_accumulation": 4,
+        "until_tokens": 1000000000,
+        "schedule_tokens": 5000000000,
+        "warmup_tokens": 10000000,
+        "learning_rate": 0.0003,
+        "min_lr_ratio": 0.1,
+        "weight_decay": 0.1,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "max_grad_norm": 1.0,
+        "checkpoint_every_tokens": 25000000,
+        "validation_every_tokens": 50000000,
+        "validation_eval_tokens": 262144,
+        "milestones": [
+          100000000,
+          500000000,
+          1000000000,
+          5000000000
+        ],
+        "log_every_updates": 10,
+        "keep_last_checkpoints": 2
+      },
+      "classification": {
+        "enabled": true,
+        "source_run": "/Data/ayb/smollm-sst2-poisoning/runs/pilot-robust-target-only",
+        "poison_file": "/Data/ayb/smollm-sst2-poisoning/runs/pilot-robust-target-only/campaigns/validation_652/poisons/optimized.json",
+        "every_lm_updates": 16,
+        "batch_size": 8,
+        "loss_weight": 1.0,
+        "max_length": 128,
+        "evaluation_batch_size": 16,
+        "provenance": "50 positive-label poisons newly optimized on unchanged pilot-robust references",
+        "random_file": "/Data/ayb/smollm-sst2-poisoning/runs/pilot-robust-target-only/campaigns/validation_652/poisons/random.json",
+        "label_policy": "target_only"
+      }
+    },
+    "data_root": "/Data/ayb/smollm-sst2-poisoning/runs/from-scratch-corpus",
+    "corpus_identity": "959b15520f1b0606386a3b1110bfbb833edd46513310f3daa09cfd024803776b",
+    "classification": {
+      "partition_sha256": "ad693b26658b6b15ebd3525097c29bcb2d6c8e1b813384acc11b29680c998754",
+      "target_sha256": "1941b67831ae70fa49922bb91a425b71ef56bfd51cb15f6d1f4885962fcd2e66",
+      "poison_file_sha256": "5d6ee3992cd3ec9d142c594e930b10da943d1c85280df5ee2a797a2a3d1f100d",
+      "clean_additions_sha256": "9635b5718e2f5cdf24ec2452772a7e561b5218012b441e510725beacb96ec33f",
+      "labels": {
+        "codes": [
+          " A",
+          " B"
+        ],
+        "label_ids": [
+          330,
+          389
+        ],
+        "max_length": 128,
+        "loss": "full-vocabulary label-token CE"
+      },
+      "provenance": "50 positive-label poisons newly optimized on unchanged pilot-robust references",
+      "random_file_sha256": "b10f44622624fb52d56df7e55c1850c1d9de384d1db07d7abab6fd9fb83d8cdc"
+    }
+  },
+  "craft_config": {
+    "run_name": "pilot-robust-target-only",
+    "model": {
+      "name": "HuggingFaceTB/SmolLM-135M",
+      "revision": "1d461723eec654e65efdc40cf49301c89c0c92f4"
+    },
+    "data": {
+      "name": "stanfordnlp/sst2",
+      "revision": "8d51e7e4887a4caaa95b3fbebbf53c0490b58bbb",
+      "train_size": 5000,
+      "dev_size": 200,
+      "reserve_size": 100
+    },
+    "split_seed": 1729,
+    "reference_seed": 42,
+    "poison_seed": 31415,
+    "victim_seeds": [
+      101
+    ],
+    "target_count": 1,
+    "target_ids": [
+      "validation:652"
+    ],
+    "balanced_targets": false,
+    "target_confidence": 0.8,
+    "max_length": 128,
+    "device": "cuda",
+    "threads": 4,
+    "evaluation_batch_size": 16,
+    "train": {
+      "epochs": 3,
+      "batch_size": 8,
+      "learning_rate": 3e-05,
+      "weight_decay": 0.01,
+      "max_grad_norm": 1.0
+    },
+    "poison": {
+      "count": 50,
+      "length": 32,
+      "steps": 200,
+      "microbatch": 1,
+      "learning_rate": 0.9,
+      "temperature_start": 0.6,
+      "temperature_end": 0.6,
+      "alignment_parameters": "all",
+      "alignment_checkpoints": [
+        "initial",
+        "reference"
+      ],
+      "target_objective": "binary_ce",
+      "vocab_limit": null,
+      "save_every": 20,
+      "optimizer": "sign_adam",
+      "initialization": "peaked_random",
+      "initialization_logit_gap": 15.0,
+      "lr_decay": true,
+      "restarts": 3,
+      "discrete_eval_every": 20,
+      "discrete_samples": 1,
+      "label_policy": "target_only"
+    }
+  },
+  "craft_provenance": {
+    "source_run": "/Data/ayb/smollm-sst2-poisoning/runs/pilot-robust",
+    "source_config_sha256": "d29d7cad268f407eb7048b2be1933963191ef78c2102c313b9bc713918f423f7",
+    "reference_weights_sha256": {
+      "initial": "c7a387d6fe81ca6dd304aeb809bda3932ff1bbef3ca41c9484502f2f448dc093",
+      "reference": "190d3f58678e2eaa62d7ad62191254e9e24fd799ab8e308b1794cf9824b2f717"
+    },
+    "changed_poison_setting": {
+      "label_policy": "target_only"
+    }
+  },
+  "craft_alignment": {
+    "alignment_parameter_count": 134515008,
+    "alignment_parameters": "all",
+    "target_objective": "binary_ce",
+    "label_policy": "target_only",
+    "ablation": true,
+    "ablation_reasons": [
+      "target_only_poison_labels",
+      "binary_target_objective",
+      "clean_checkpoint_ensemble",
+      "poison_optimizer_or_initialization"
+    ],
+    "usable_vocabulary_size": 48660,
+    "poison_seed": 31415,
+    "relaxed_final_sample_alignment": 0.6438578963279724,
+    "optimized_discrete_retokenized_alignment": 0.7050731778144836,
+    "random_discrete_retokenized_alignment": 0.49703365564346313,
+    "alignment_checkpoints": [
+      "initial",
+      "reference"
+    ],
+    "optimized_alignment_by_checkpoint": {
+      "initial": 0.5468817353248596,
+      "reference": 0.7050731778144836
+    },
+    "random_alignment_by_checkpoint": {
+      "initial": 0.31076115369796753,
+      "reference": 0.49703365564346313
+    },
+    "selection_mean_alignment": 0.6259774565696716,
+    "review_token_count": 1674,
+    "labels": {
+      "0": 0,
+      "1": 50
+    },
+    "target_id": "validation:652",
+    "steps": 200,
+    "restarts": 3,
+    "poison_optimizer": "sign_adam",
+    "initialization": "peaked_random",
+    "selected_candidate": {
+      "restart": 0,
+      "seed": 31415,
+      "step": 180,
+      "candidate": "argmax",
+      "discrete_alignment": 0.6259774565696716,
+      "alignment_by_checkpoint": {
+        "initial": 0.5468817353248596,
+        "reference": 0.7050731778144836
+      }
+    },
+    "relaxed_final_sample_note": "Last pre-update relaxed sample of the last restart; not the selected text score",
+    "discrete_candidates_evaluated": 60,
+    "duration_seconds": 31618.55523247196,
+    "peak_gpu_allocated_bytes": 6789623296,
+    "optimization_microbatch_passes": 120000,
+    "resumed_checkpoints": [],
+    "optimization_microbatch_passes_this_invocation": 120000,
+    "duration_scope": "current invocation only; excludes previously saved computation"
+  },
+  "conditions": {
+    "clean": {
+      "state": {
+        "lm_updates": 30518,
+        "classification_updates": 1907,
+        "tokens": 1000013824,
+        "classification_tokens": 295785,
+        "poison_exposures": 0,
+        "added_exposures": 152,
+        "wall_seconds": 53155.22165728996,
+        "condition": "clean",
+        "tokens_per_update": 32768,
+        "initial_weights_sha256": "5a694c3d5efc312c6b73e745e5b97b8555bf2c19da641536969f874cb7e7ac17",
+        "status": "budget_reached",
+        "requested_until_tokens": 1000000000,
+        "rounded_until_tokens": 1000013824,
+        "peak_gpu_allocated_gib": 15.039332389831543,
+        "latest_checkpoint": "checkpoints/step-000030518"
+      },
+      "evaluation": {
+        "event": "evaluation",
+        "lm_updates": 30518,
+        "tokens": 1000013824,
+        "language_model": {
+          "loss": 3.2750283795352257,
+          "perplexity": 26.44397593766056,
+          "input_tokens": 10000384
+        },
+        "classification": {
+          "accuracy": 0.7972027972027972,
+          "macro_f1": 0.7941194722666964,
+          "count": 572
+        },
+        "targets": [
+          {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9999948740005493,
+              5.159929969522636e-06
+            ],
+            "label_logits": [
+              15.641357421875,
+              3.4667751789093018
+            ]
+          }
+        ]
+      },
+      "result_file_modified_at": "2026-11-01T19:02:53.517250+01:00",
+      "target_evaluations": [
+        {
+          "tokens": 0,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 1,
+            "probabilities": [
+              0.4573732614517212,
+              0.5426267385482788
+            ],
+            "label_logits": [
+              -0.12240290641784668,
+              0.04851905256509781
+            ]
+          }
+        },
+        {
+          "tokens": 50003968,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 1,
+            "probabilities": [
+              0.369396835565567,
+              0.6306031942367554
+            ],
+            "label_logits": [
+              14.221834182739258,
+              14.75663948059082
+            ]
+          }
+        },
+        {
+          "tokens": 100007936,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.7878062129020691,
+              0.21219374239444733
+            ],
+            "label_logits": [
+              15.340766906738281,
+              14.029014587402344
+            ]
+          }
+        },
+        {
+          "tokens": 150011904,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.977972149848938,
+              0.02202782593667507
+            ],
+            "label_logits": [
+              14.226444244384766,
+              10.433269500732422
+            ]
+          }
+        },
+        {
+          "tokens": 200015872,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 1,
+            "probabilities": [
+              0.17921358346939087,
+              0.8207864165306091
+            ],
+            "label_logits": [
+              14.315679550170898,
+              15.837364196777344
+            ]
+          }
+        },
+        {
+          "tokens": 250019840,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.8141124248504639,
+              0.18588759005069733
+            ],
+            "label_logits": [
+              14.31075668334961,
+              12.833800315856934
+            ]
+          }
+        },
+        {
+          "tokens": 300023808,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.993283748626709,
+              0.0067162103950977325
+            ],
+            "label_logits": [
+              15.247200012207031,
+              10.250707626342773
+            ]
+          }
+        },
+        {
+          "tokens": 350027776,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.8743594288825989,
+              0.12564058601856232
+            ],
+            "label_logits": [
+              14.352060317993164,
+              12.411993980407715
+            ]
+          }
+        },
+        {
+          "tokens": 400031744,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9475986957550049,
+              0.052401360124349594
+            ],
+            "label_logits": [
+              15.302132606506348,
+              12.407134056091309
+            ]
+          }
+        },
+        {
+          "tokens": 450035712,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9593743085861206,
+              0.04062569886445999
+            ],
+            "label_logits": [
+              14.254770278930664,
+              11.092889785766602
+            ]
+          }
+        },
+        {
+          "tokens": 500006912,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9704456329345703,
+              0.029554344713687897
+            ],
+            "label_logits": [
+              14.967857360839844,
+              11.476332664489746
+            ]
+          }
+        },
+        {
+          "tokens": 550010880,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9979567527770996,
+              0.0020432157907634974
+            ],
+            "label_logits": [
+              15.800104141235352,
+              9.608919143676758
+            ]
+          }
+        },
+        {
+          "tokens": 600014848,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9831427931785583,
+              0.016857238486409187
+            ],
+            "label_logits": [
+              15.328718185424805,
+              11.262743949890137
+            ]
+          }
+        },
+        {
+          "tokens": 650018816,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9960885047912598,
+              0.00391151150688529
+            ],
+            "label_logits": [
+              15.378673553466797,
+              9.838761329650879
+            ]
+          }
+        },
+        {
+          "tokens": 700022784,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9981971383094788,
+              0.0018028798513114452
+            ],
+            "label_logits": [
+              15.589816093444824,
+              9.273250579833984
+            ]
+          }
+        },
+        {
+          "tokens": 750026752,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9999688863754272,
+              3.115422441624105e-05
+            ],
+            "label_logits": [
+              15.524381637573242,
+              5.147852420806885
+            ]
+          }
+        },
+        {
+          "tokens": 800030720,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9993738532066345,
+              0.0006262303213588893
+            ],
+            "label_logits": [
+              15.090164184570312,
+              7.714998245239258
+            ]
+          }
+        },
+        {
+          "tokens": 850034688,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9997684359550476,
+              0.0002315757592441514
+            ],
+            "label_logits": [
+              14.267478942871094,
+              5.897107124328613
+            ]
+          }
+        },
+        {
+          "tokens": 900038656,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.8724650740623474,
+              0.127534881234169
+            ],
+            "label_logits": [
+              12.279064178466797,
+              10.356131553649902
+            ]
+          }
+        },
+        {
+          "tokens": 950042624,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9976060390472412,
+              0.002393994014710188
+            ],
+            "label_logits": [
+              13.149971961975098,
+              7.117576599121094
+            ]
+          }
+        },
+        {
+          "tokens": 1000013824,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9999948740005493,
+              5.159929969522636e-06
+            ],
+            "label_logits": [
+              15.641357421875,
+              3.4667751789093018
+            ]
+          }
+        }
+      ]
+    },
+    "random": {
+      "state": {
+        "lm_updates": 30518,
+        "classification_updates": 1907,
+        "tokens": 1000013824,
+        "classification_tokens": 299256,
+        "poison_exposures": 0,
+        "added_exposures": 152,
+        "wall_seconds": 53020.019250130004,
+        "condition": "random",
+        "tokens_per_update": 32768,
+        "initial_weights_sha256": "5a694c3d5efc312c6b73e745e5b97b8555bf2c19da641536969f874cb7e7ac17",
+        "status": "budget_reached",
+        "requested_until_tokens": 1000000000,
+        "rounded_until_tokens": 1000013824,
+        "peak_gpu_allocated_gib": 15.039332389831543,
+        "latest_checkpoint": "checkpoints/step-000030518"
+      },
+      "evaluation": {
+        "event": "evaluation",
+        "lm_updates": 30518,
+        "tokens": 1000013824,
+        "language_model": {
+          "loss": 3.275338240927564,
+          "perplexity": 26.452171174491745,
+          "input_tokens": 10000384
+        },
+        "classification": {
+          "accuracy": 0.7587412587412588,
+          "macro_f1": 0.7504930966469427,
+          "count": 572
+        },
+        "targets": [
+          {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9998181462287903,
+              0.0001818437740439549
+            ],
+            "label_logits": [
+              15.262258529663086,
+              6.6500773429870605
+            ]
+          }
+        ]
+      },
+      "result_file_modified_at": "2026-11-03T01:53:30.869914+01:00",
+      "target_evaluations": [
+        {
+          "tokens": 0,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 1,
+            "probabilities": [
+              0.4573732614517212,
+              0.5426267385482788
+            ],
+            "label_logits": [
+              -0.12240290641784668,
+              0.04851905256509781
+            ]
+          }
+        },
+        {
+          "tokens": 50003968,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.6547194719314575,
+              0.3452805280685425
+            ],
+            "label_logits": [
+              14.312555313110352,
+              13.67270565032959
+            ]
+          }
+        },
+        {
+          "tokens": 100007936,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.7800031900405884,
+              0.21999679505825043
+            ],
+            "label_logits": [
+              15.237266540527344,
+              13.97158145904541
+            ]
+          }
+        },
+        {
+          "tokens": 150011904,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.6274245977401733,
+              0.37257543206214905
+            ],
+            "label_logits": [
+              14.50929069519043,
+              13.988106727600098
+            ]
+          }
+        },
+        {
+          "tokens": 200015872,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9486935138702393,
+              0.051306433975696564
+            ],
+            "label_logits": [
+              14.856100082397461,
+              11.938830375671387
+            ]
+          }
+        },
+        {
+          "tokens": 250019840,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.6369357109069824,
+              0.3630642592906952
+            ],
+            "label_logits": [
+              13.8490629196167,
+              13.28697395324707
+            ]
+          }
+        },
+        {
+          "tokens": 300023808,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9915918111801147,
+              0.008408166468143463
+            ],
+            "label_logits": [
+              15.348323822021484,
+              10.578215599060059
+            ]
+          }
+        },
+        {
+          "tokens": 350027776,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9256284832954407,
+              0.07437154650688171
+            ],
+            "label_logits": [
+              14.57146167755127,
+              12.05006217956543
+            ]
+          }
+        },
+        {
+          "tokens": 424837120,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9430240392684937,
+              0.056976012885570526
+            ],
+            "label_logits": [
+              15.585431098937988,
+              12.778969764709473
+            ]
+          }
+        },
+        {
+          "tokens": 474841088,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9876771569252014,
+              0.012322768568992615
+            ],
+            "label_logits": [
+              16.634212493896484,
+              12.25030517578125
+            ]
+          }
+        },
+        {
+          "tokens": 500006912,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.999778687953949,
+              0.00022133132733870298
+            ],
+            "label_logits": [
+              16.78874969482422,
+              8.37312126159668
+            ]
+          }
+        },
+        {
+          "tokens": 550010880,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9958404898643494,
+              0.004159531090408564
+            ],
+            "label_logits": [
+              15.090956687927246,
+              9.612771987915039
+            ]
+          }
+        },
+        {
+          "tokens": 600014848,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9927512407302856,
+              0.007248708512634039
+            ],
+            "label_logits": [
+              15.135292053222656,
+              10.215635299682617
+            ]
+          }
+        },
+        {
+          "tokens": 650018816,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9963339567184448,
+              0.003666080068796873
+            ],
+            "label_logits": [
+              15.676786422729492,
+              10.071826934814453
+            ]
+          }
+        },
+        {
+          "tokens": 700022784,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9961643218994141,
+              0.003835665062069893
+            ],
+            "label_logits": [
+              15.464019775390625,
+              9.904450416564941
+            ]
+          }
+        },
+        {
+          "tokens": 750026752,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9999449253082275,
+              5.5069103837013245e-05
+            ],
+            "label_logits": [
+              16.027902603149414,
+              6.221035957336426
+            ]
+          }
+        },
+        {
+          "tokens": 829227008,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9961029291152954,
+              0.003897035727277398
+            ],
+            "label_logits": [
+              14.266247749328613,
+              8.722613334655762
+            ]
+          }
+        },
+        {
+          "tokens": 879230976,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9996850490570068,
+              0.0003149320837110281
+            ],
+            "label_logits": [
+              14.693914413452148,
+              6.631075859069824
+            ]
+          }
+        },
+        {
+          "tokens": 964034560,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9999297857284546,
+              7.021334749879315e-05
+            ],
+            "label_logits": [
+              13.911258697509766,
+              4.347356796264648
+            ]
+          }
+        },
+        {
+          "tokens": 1000013824,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9998181462287903,
+              0.0001818437740439549
+            ],
+            "label_logits": [
+              15.262258529663086,
+              6.6500773429870605
+            ]
+          }
+        }
+      ]
+    },
+    "poisoned": {
+      "state": {
+        "lm_updates": 30518,
+        "classification_updates": 1907,
+        "tokens": 1000013824,
+        "classification_tokens": 299256,
+        "poison_exposures": 152,
+        "added_exposures": 152,
+        "wall_seconds": 54769.061671692005,
+        "condition": "poisoned",
+        "tokens_per_update": 32768,
+        "initial_weights_sha256": "5a694c3d5efc312c6b73e745e5b97b8555bf2c19da641536969f874cb7e7ac17",
+        "status": "budget_reached",
+        "requested_until_tokens": 1000000000,
+        "rounded_until_tokens": 1000013824,
+        "peak_gpu_allocated_gib": 15.039332389831543,
+        "latest_checkpoint": "checkpoints/step-000030518"
+      },
+      "evaluation": {
+        "event": "evaluation",
+        "lm_updates": 30518,
+        "tokens": 1000013824,
+        "language_model": {
+          "loss": 3.2735293614627543,
+          "perplexity": 26.4043656355186,
+          "input_tokens": 10000384
+        },
+        "classification": {
+          "accuracy": 0.7412587412587412,
+          "macro_f1": 0.7320571739653361,
+          "count": 572
+        },
+        "targets": [
+          {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9999469518661499,
+              5.305134254740551e-05
+            ],
+            "label_logits": [
+              15.964893341064453,
+              6.120696067810059
+            ]
+          }
+        ]
+      },
+      "result_file_modified_at": "2026-11-04T05:20:29.468302+01:00",
+      "target_evaluations": [
+        {
+          "tokens": 0,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 1,
+            "probabilities": [
+              0.4573732614517212,
+              0.5426267385482788
+            ],
+            "label_logits": [
+              -0.12240290641784668,
+              0.04851905256509781
+            ]
+          }
+        },
+        {
+          "tokens": 50003968,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.6476622223854065,
+              0.3523378074169159
+            ],
+            "label_logits": [
+              14.861824035644531,
+              14.253045082092285
+            ]
+          }
+        },
+        {
+          "tokens": 100007936,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.6831470727920532,
+              0.3168529272079468
+            ],
+            "label_logits": [
+              14.794307708740234,
+              14.02603530883789
+            ]
+          }
+        },
+        {
+          "tokens": 150011904,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9143056273460388,
+              0.0856943279504776
+            ],
+            "label_logits": [
+              16.394258499145508,
+              14.026880264282227
+            ]
+          }
+        },
+        {
+          "tokens": 200015872,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9152306914329529,
+              0.0847693607211113
+            ],
+            "label_logits": [
+              15.435705184936523,
+              13.056463241577148
+            ]
+          }
+        },
+        {
+          "tokens": 250019840,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.8315889835357666,
+              0.16841106116771698
+            ],
+            "label_logits": [
+              14.646337509155273,
+              13.049407005310059
+            ]
+          }
+        },
+        {
+          "tokens": 300023808,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9966151118278503,
+              0.0033849221654236317
+            ],
+            "label_logits": [
+              15.662162780761719,
+              9.977128982543945
+            ]
+          }
+        },
+        {
+          "tokens": 364773376,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9779465198516846,
+              0.022053439170122147
+            ],
+            "label_logits": [
+              15.99314022064209,
+              12.201153755187988
+            ]
+          }
+        },
+        {
+          "tokens": 414777344,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9978829026222229,
+              0.002117135562002659
+            ],
+            "label_logits": [
+              16.589031219482422,
+              10.433459281921387
+            ]
+          }
+        },
+        {
+          "tokens": 464781312,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9903864860534668,
+              0.009613482281565666
+            ],
+            "label_logits": [
+              16.888534545898438,
+              12.253605842590332
+            ]
+          }
+        },
+        {
+          "tokens": 500006912,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9783403277397156,
+              0.021659623831510544
+            ],
+            "label_logits": [
+              15.939759254455566,
+              12.129351615905762
+            ]
+          }
+        },
+        {
+          "tokens": 550010880,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.917719304561615,
+              0.082280732691288
+            ],
+            "label_logits": [
+              15.384847640991211,
+              12.973093032836914
+            ]
+          }
+        },
+        {
+          "tokens": 600014848,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9691160917282104,
+              0.03088388592004776
+            ],
+            "label_logits": [
+              15.233530044555664,
+              11.78738021850586
+            ]
+          }
+        },
+        {
+          "tokens": 650018816,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9989621639251709,
+              0.0010378496954217553
+            ],
+            "label_logits": [
+              16.406509399414062,
+              9.536943435668945
+            ]
+          }
+        },
+        {
+          "tokens": 700022784,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.98651123046875,
+              0.013488704338669777
+            ],
+            "label_logits": [
+              15.286148071289062,
+              10.993825912475586
+            ]
+          }
+        },
+        {
+          "tokens": 763133952,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9968470931053162,
+              0.003152853576466441
+            ],
+            "label_logits": [
+              16.0788516998291,
+              10.322562217712402
+            ]
+          }
+        },
+        {
+          "tokens": 813137920,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9999014139175415,
+              9.851900540525094e-05
+            ],
+            "label_logits": [
+              16.619293212890625,
+              7.394130706787109
+            ]
+          }
+        },
+        {
+          "tokens": 863141888,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9999018907546997,
+              9.805142326513305e-05
+            ],
+            "label_logits": [
+              17.180789947509766,
+              7.950869560241699
+            ]
+          }
+        },
+        {
+          "tokens": 913145856,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.998570442199707,
+              0.001429564319550991
+            ],
+            "label_logits": [
+              15.237869262695312,
+              8.68891429901123
+            ]
+          }
+        },
+        {
+          "tokens": 963149824,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9548740983009338,
+              0.04512590169906616
+            ],
+            "label_logits": [
+              13.24374771118164,
+              10.191624641418457
+            ]
+          }
+        },
+        {
+          "tokens": 1000013824,
+          "target": {
+            "id": "validation:652",
+            "label": 0,
+            "prediction": 0,
+            "probabilities": [
+              0.9999469518661499,
+              5.305134254740551e-05
+            ],
+            "label_logits": [
+              15.964893341064453,
+              6.120696067810059
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "comparability": {
+    "common_random_initialization": true,
+    "same_lm_token_budget": true,
+    "same_classification_updates": true,
+    "same_added_exposures": true,
+    "positive_labels_and_serialized_token_lengths_paired": true
+  },
+  "source_sha256": {
+    "runs/from-scratch-target-only/run_manifest.json": "189ae9368291064a5c63a8d6e68f632dd8aa54c838926d18e1dca62dfb0d29f7",
+    "runs/from-scratch-target-only/initial_manifest.json": "531cde28374e5fef1b40af8751c2cb05af2d01e1478b63d79b2a52eca58db33f",
+    "runs/from-scratch-target-only/results.json": "e8eb9af14173be5d83f58fd678b3bd084ee08a534364635b01d05012c93c9420",
+    "runs/from-scratch-target-only/clean/result.json": "024aca06267b5b63332c449874234d55f40df034c1769e5f73f321a66eefc24f",
+    "runs/from-scratch-target-only/clean/evaluation.json": "bcf9db2026a08a843b2aaf8adc73e0dea499b58fdc013f51ce02cfbf6bc33351",
+    "runs/from-scratch-target-only/clean/training.jsonl": "f6db798a37cdb1abd95e3beab5f40481e0ec7df41b0c24b2e229906b263275e4",
+    "runs/from-scratch-target-only/random/result.json": "de2d2a54177d4773472179c28b461b1912fbf797df09a554c0c1dcb95e0758b2",
+    "runs/from-scratch-target-only/random/evaluation.json": "e12513b55c3dcaff9878e250793f5e4ca525792ec77469ed9586b94a07728ae1",
+    "runs/from-scratch-target-only/random/training.jsonl": "172f2868765e55d48db14adb00ebaa4d0e94630b67a38d8c548a3d54f9c29e36",
+    "runs/from-scratch-target-only/poisoned/result.json": "febfa2c7baa3a1f550a1f8b1b6ef2aafbcf32529cd457ef89206a53ab0fe5f7c",
+    "runs/from-scratch-target-only/poisoned/evaluation.json": "441dcb378904bccf0535f2bded698a05c5924f1c01f1accad1179f1c1cc20c5e",
+    "runs/from-scratch-target-only/poisoned/training.jsonl": "738988a5b2beab269b2e71ed23cbf0e0ec8d5f586c368f801ae49a4700ba2d3e",
+    "runs/pilot-robust-target-only/config.json": "a8d6ef80c0cbea0c7d640273792e458e4acc10b22e60887aa4430d959ad8ea0c",
+    "runs/pilot-robust-target-only/pretraining-config.json": "86c0aa43715fb39292c513e6e15960858ac0c30a6bc8783c18f026d7633e376a",
+    "runs/pilot-robust-target-only/provenance.json": "63f99593bd8a28d0eb55ed6b7ca387e175c280ad5f8e37c98992385854fa2ecd",
+    "runs/pilot-robust-target-only/campaigns/validation_652/poisons/alignment.json": "884f423ffed6e70bc0c87c5ad62e587557aa70f49436bdb29d7b7e6b8434d219",
+    "runs/pilot-robust-target-only/campaigns/validation_652/poisons/optimized.json": "5d6ee3992cd3ec9d142c594e930b10da943d1c85280df5ee2a797a2a3d1f100d",
+    "runs/pilot-robust-target-only/campaigns/validation_652/poisons/random.json": "b10f44622624fb52d56df7e55c1850c1d9de384d1db07d7abab6fd9fb83d8cdc"
+  },
+  "note": "State data_parts and craft alignment_parameter_names omitted for compactness. Full source files are identified by SHA-256. Token-length pairing checked using exported retokenized IDs."
+}
